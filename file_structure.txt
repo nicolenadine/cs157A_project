@@ -1,0 +1,110 @@
+VetAppointmentPortal/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── com/
+│   │   │   │   ├── vetportal/
+│   │   │   │   │   ├── Main.java                      # Application entry point
+│   │   │   │   │   │
+│   │   │   │   │   ├── model/                         # Data models (entities)
+│   │   │   │   │   │   ├── Customer.java
+│   │   │   │   │   │   ├── Pet.java
+│   │   │   │   │   │   ├── Appointment.java
+│   │   │   │   │   │   ├── Employee.java
+│   │   │   │   │   │   └── Certification.java
+│   │   │   │   │   │
+│   │   │   │   │   ├── dto/                           # Data Transfer Objects
+│   │   │   │   │   │   ├── CustomerDTO.java
+│   │   │   │   │   │   ├── PetDTO.java
+│   │   │   │   │   │   ├── AppointmentDTO.java
+│   │   │   │   │   │   ├── EmployeeDTO.java
+│   │   │   │   │   │   ├── CertificationDTO.java
+│   │   │   │   │   │   ├── PetWithOwnerDTO.java       # Combined/specialized DTOs
+│   │   │   │   │   │   └── AppointmentDetailsDTO.java # Combined/specialized DTOs
+│   │   │   │   │   │
+│   │   │   │   │   ├── mapper/                        # Object mappers
+│   │   │   │   │   │   ├── CustomerMapper.java
+│   │   │   │   │   │   ├── PetMapper.java
+│   │   │   │   │   │   ├── AppointmentMapper.java
+│   │   │   │   │   │   ├── EmployeeMapper.java
+│   │   │   │   │   │   └── CertificationMapper.java
+│   │   │   │   │   │
+│   │   │   │   │   ├── dao/                           # Data Access Objects
+│   │   │   │   │   │   ├── interfaces/                # DAO interfaces
+│   │   │   │   │   │   │   ├── CustomerDAO.java
+│   │   │   │   │   │   │   ├── PetDAO.java
+│   │   │   │   │   │   │   ├── AppointmentDAO.java
+│   │   │   │   │   │   │   ├── EmployeeDAO.java
+│   │   │   │   │   │   │   └── CertificationDAO.java
+│   │   │   │   │   │   │
+│   │   │   │   │   │   ├── impl/                      # DAO implementations
+│   │   │   │   │   │   │   ├── CustomerDAOImpl.java
+│   │   │   │   │   │   │   ├── PetDAOImpl.java
+│   │   │   │   │   │   │   ├── AppointmentDAOImpl.java
+│   │   │   │   │   │   │   ├── EmployeeDAOImpl.java
+│   │   │   │   │   │   │   └── CertificationDAOImpl.java
+│   │   │   │   │   │   │
+│   │   │   │   │   │   └── DBManager.java             # Database connection management
+│   │   │   │   │   │
+│   │   │   │   │   ├── service/                       # Business logic layer
+│   │   │   │   │   │   ├── interfaces/                # Service interfaces
+│   │   │   │   │   │   │   ├── CustomerService.java
+│   │   │   │   │   │   │   ├── PetService.java
+│   │   │   │   │   │   │   ├── AppointmentService.java
+│   │   │   │   │   │   │   ├── EmployeeService.java
+│   │   │   │   │   │   │   └── CertificationService.java
+│   │   │   │   │   │   │
+│   │   │   │   │   │   └── impl/                      # Service implementations
+│   │   │   │   │   │       ├── CustomerServiceImpl.java
+│   │   │   │   │   │       ├── PetServiceImpl.java
+│   │   │   │   │   │       ├── AppointmentServiceImpl.java
+│   │   │   │   │   │       ├── EmployeeServiceImpl.java
+│   │   │   │   │   │       └── CertificationServiceImpl.java
+│   │   │   │   │   │
+│   │   │   │   │   ├── controller/                    # JavaFX controllers
+│   │   │   │   │   │   ├── MainController.java
+│   │   │   │   │   │   ├── CustomerController.java
+│   │   │   │   │   │   ├── PetController.java
+│   │   │   │   │   │   ├── AppointmentController.java
+│   │   │   │   │   │   └── EmployeeController.java
+│   │   │   │   │   │
+│   │   │   │   │   ├── util/                          # Utility classes
+│   │   │   │   │   │   ├── ValidationUtil.java
+│   │   │   │   │   │   └── DateTimeUtil.java
+│   │   │   │   │   │
+│   │   │   │   │   └── manager/                       # Management classes
+│   │   │   │   │       ├── ServiceManager.java
+│   │   │   │   │       ├── SceneManager.java
+│   │   │   │   │       └── ExceptionManager.java
+│   │   │   │   │
+│   │   ├── resources/
+│   │   │   ├── fxml/                                  # JavaFX FXML files
+│   │   │   │   ├── main.fxml
+│   │   │   │   ├── customer.fxml
+│   │   │   │   ├── pet.fxml
+│   │   │   │   ├── appointment.fxml
+│   │   │   │   └── employee.fxml
+│   │   │   │
+│   │   │   ├── css/                                   # CSS styling
+│   │   │   │   └── styles.css
+│   │   │   │
+│   │   │   ├── images/                                # Images
+│   │   │   │
+│   │   │   └── database/                              # Database scripts
+│   │   │       ├── schema.sql                         # Create tables
+│   │   │       └── seed.sql                           # Initial data
+│
+├── lib/                                               # External libraries
+│
+├── test/                                              # Unit tests
+│   └── java/
+│       └── com/
+│           └── vetportal/
+│               ├── dao/
+│               ├── service/
+│               └── controller/
+│
+├── .gitignore
+├── README.md
+└── build.gradle or pom.xml                            # Build configuration
