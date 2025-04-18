@@ -48,8 +48,7 @@ public class DatabaseInitializer {
     }
 
     public static void main(String[] args) {
-        // Provide paths to your schema.sql and seed.sql files
-        // Adjusted to match your actual directory structure
+        // Path to schema and seed files
         String schemaPath = "src/resources/database/schema.sql";
         String seedPath = "src/resources/database/seed.sql";
 
