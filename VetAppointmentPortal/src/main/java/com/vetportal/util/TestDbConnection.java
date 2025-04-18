@@ -14,7 +14,7 @@ public class TestDbConnection {
             // Print connection status
             System.out.println("Database connection established: " + !connection.isClosed());
 
-            // Create a test query - this will check if the Customer table exists
+            // test query - will check if the Customer table exists
             String sql = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='Customer'";
 
             try (Statement stmt = connection.createStatement();
@@ -25,7 +25,7 @@ public class TestDbConnection {
                     if (count > 0) {
                         System.out.println("Customer table exists!");
 
-                        // Now query the Customer table to verify we can access data
+                        // query the Customer table to verify data can be processed
                         String customerQuery = "SELECT * FROM Customer LIMIT 5";
                         try (Statement custStmt = connection.createStatement();
                              ResultSet custRs = custStmt.executeQuery(customerQuery)) {
