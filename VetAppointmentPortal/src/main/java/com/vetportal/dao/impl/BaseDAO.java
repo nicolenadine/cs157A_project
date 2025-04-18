@@ -11,14 +11,12 @@ import java.util.ArrayList;
 public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected Connection connection;
 
-    // These will need to be implemented by child classes
     protected abstract String getCreateQuery();
     protected abstract String getUpdateQuery();
     protected abstract String getDeleteQuery();
     protected abstract String getFindByIdQuery();
     protected abstract String getFindAllQuery();
 
-    // These will need to be implemented to handle JDBC parameter setting
     protected abstract void setCreateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract void setUpdateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract T extractEntityFromResultSet(ResultSet rs) throws SQLException;
