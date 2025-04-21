@@ -2,15 +2,23 @@ package com.vetportal;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class main extends Application {
+import java.net.URL;
+
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+
+        URL fxmlUrl = getClass().getResource("/fxml/main.fxml");
+        if (fxmlUrl == null) {
+            throw new IllegalStateException("FXML file not found: /fxml/main.fxml");
+        }
+        Parent root = FXMLLoader.load(fxmlUrl);
+
         primaryStage.setTitle("Vet Appointment Portal");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

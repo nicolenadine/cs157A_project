@@ -1,10 +1,16 @@
 
 # Maven
-/target/
+target/
+*.class
+
 
 # IntelliJ
 .idea/
 *.iml
 
 # OS files
+<<<<<<< Updated upstream
 .DS_STORE
+=======
+.DS_STORE
+>>>>>>> Stashed changes
