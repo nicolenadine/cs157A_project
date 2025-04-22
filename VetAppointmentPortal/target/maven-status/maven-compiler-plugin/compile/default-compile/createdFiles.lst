@@ -1,8 +1,0 @@
-com\vetportal\util\TestDbConnection.class
-com\vetportal\model\Customer.class
-com\vetportal\util\DbManager.class
-com\vetportal\util\DatabaseInitializer.class
-com\vetportal\dao\impl\CustomerDAO.class
-com\vetportal\util\SimpleDbTest.class
-com\vetportal\dao\interfaces\GenericDAO.class
-com\vetportal\dao\impl\BaseDAO.class
