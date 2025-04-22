@@ -1,12 +1,13 @@
 package com.vetportal.dao.impl;
 
+import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Optional;
 
 public class CustomerDAO extends BaseDAO<Customer> {
 
@@ -16,33 +17,33 @@ public class CustomerDAO extends BaseDAO<Customer> {
 
     @Override
     protected String getCreateQuery() {
-        return "INSERT INTO customers (first_name, last_name, email, phone, address) VALUES (?, ?, ?, ?, ?)";
+        return "INSERT INTO customer (first_name, last_name, email, phone, address) VALUES (?, ?, ?, ?, ?)";
     }
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE customers SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
+        return "UPDATE customer SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
     }
 
     @Override
     protected String getDeleteQuery() {
-        return "DELETE FROM customers WHERE id = ?";
+        return "DELETE FROM customer WHERE id = ?";
     }
 
     @Override
     protected String getFindByIdQuery() {
-        return "SELECT * FROM customers WHERE id = ?";
+        return "SELECT * FROM customer WHERE id = ?";
     }
 
     @Override
     protected String getFindAllQuery() {
-        return "SELECT * FROM customers";
+        return "SELECT * FROM customer";
     }
 
     @Override
     protected void setCreateStatement(PreparedStatement statement, Customer customer) throws SQLException {
-        statement.setString(1, customer.getFirstname());
-        statement.setString(2, customer.getLastname());
+        statement.setString(1, customer.getFirstName());
+        statement.setString(2, customer.getLastName());
         statement.setString(3, customer.getEmail());
         statement.setString(4, customer.getPhone());
         statement.setString(5, customer.getAddress());
@@ -50,8 +51,8 @@ public class CustomerDAO extends BaseDAO<Customer> {
 
     @Override
     protected void setUpdateStatement(PreparedStatement statement, Customer customer) throws SQLException {
-        statement.setString(1, customer.getFirstname());
-        statement.setString(2, customer.getLastname());
+        statement.setString(1, customer.getFirstName());
+        statement.setString(2, customer.getLastName());
         statement.setString(3, customer.getEmail());
         statement.setString(4, customer.getPhone());
         statement.setString(5, customer.getAddress());
@@ -62,41 +63,56 @@ public class CustomerDAO extends BaseDAO<Customer> {
     protected Customer extractEntityFromResultSet(ResultSet rs) throws SQLException {
         return new Customer(
                 rs.getInt("id"),
-                rs.getString("firstname"),
-                rs.getString("lastname"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
                 rs.getString("email"),
                 rs.getString("phone"),
                 rs.getString("address")
         );
     }
 
-    public Customer findByPhone(String phone) {
-        String query = "SELECT * FROM customers WHERE phone = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, phone);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    return extractEntityFromResultSet(rs);
-                }
-            }
-        } catch (SQLException e) {
-            // Log exception
-        }
-        return null;
+    // -----------  FIND CUSTOMER BY PHONE, NAME, OR EMAIL -----------
+    public Optional<Customer> findByPhone(String phone) {
+        return findCustomer("SELECT * FROM customer WHERE phone = ?", phone);
     }
 
-    public Customer findByEmail(String email) {
-        String query = "SELECT * FROM customers WHERE email = ?";
+    public Optional<Customer> findByName(String firstName, String lastName) {
+        String query = "SELECT * FROM customer WHERE first_name = ? AND last_name = ?";
+        return findCustomer(query, firstName, lastName);
+    }
+
+    public Optional<Customer> findByEmail(String email) {
+        return findCustomer("SELECT * FROM customer WHERE email = ?", email);
+    }
+
+
+    private Optional<Customer> findCustomer(String query, String... values) {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, email);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    return extractEntityFromResultSet(rs);
-                }
+            for (int i = 0; i < values.length; i++) {
+                statement.setString(i + 1, values[i]);  // JDBC is 1-indexed
+            }
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return Optional.of(extractCustomer(rs));
             }
         } catch (SQLException e) {
-            // Log exception
+            e.printStackTrace();
+            throw new DataAccessException("Failed to fetch customer with query: " + query, e);
         }
-        return null;
+        return Optional.empty();
     }
+
+
+
+    private Customer extractCustomer(ResultSet rs) throws SQLException {
+        return new Customer(
+                rs.getInt("id"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("email"),
+                rs.getString("phone"),
+                rs.getString("address")
+        );
+    }
+
 }

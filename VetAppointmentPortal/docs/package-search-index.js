@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.vetportal"},{"l":"com.vetportal.controller"},{"l":"com.vetportal.dao.impl"},{"l":"com.vetportal.dao.interfaces"},{"l":"com.vetportal.dto"},{"l":"com.vetportal.exception"},{"l":"com.vetportal.model"},{"l":"com.vetportal.service"},{"l":"com.vetportal.util"}];updateSearchResults();

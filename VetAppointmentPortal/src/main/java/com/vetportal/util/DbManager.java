@@ -25,4 +25,8 @@ public class DbManager {
             }
         }
     }
+
+    public static boolean isClosed() {
+        return connection == null;
+    }
 }

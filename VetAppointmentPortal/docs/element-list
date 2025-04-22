@@ -1,0 +1,9 @@
+com.vetportal
+com.vetportal.controller
+com.vetportal.dao.impl
+com.vetportal.dao.interfaces
+com.vetportal.dto
+com.vetportal.exception
+com.vetportal.model
+com.vetportal.service
+com.vetportal.util

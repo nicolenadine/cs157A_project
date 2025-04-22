@@ -25,7 +25,7 @@ public class Customer {
         this.id = id;
     }
 
-    public String getFirstname() {
+    public String getFirstName() {
         return firstname;
     }
 
@@ -33,7 +33,7 @@ public class Customer {
         this.firstname = firstname;
     }
 
-    public String getLastname() {
+    public String getLastName() {
         return lastname;
     }
 
