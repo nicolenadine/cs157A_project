@@ -71,48 +71,41 @@ public class CustomerDAO extends BaseDAO<Customer> {
         );
     }
 
-    // -----------  FIND CUSTOMER BY PHONE, NAME, OR EMAIL -----------
-    public Optional<Customer> findByPhone(String phone) {
-        return findCustomer("SELECT * FROM customer WHERE phone = ?", phone);
-    }
+    // -----------  FIND CUSTOMER BY SEARCH FIELD -----------
+    public Optional<Customer> findByFields(Map<String, String> fieldValueMap) {
+        Set<String> allowedFields = Set.of("first_name", "last_name", "address", "email", "phone");
 
-    public Optional<Customer> findByName(String firstName, String lastName) {
-        String query = "SELECT * FROM customer WHERE first_name = ? AND last_name = ?";
-        return findCustomer(query, firstName, lastName);
-    }
+        if (fieldValueMap.isEmpty()) {
+            throw new IllegalArgumentException("At least one field must be provided for search.");
+        }
 
-    public Optional<Customer> findByEmail(String email) {
-        return findCustomer("SELECT * FROM customer WHERE email = ?", email);
-    }
-
-
-    private Optional<Customer> findCustomer(String query, String... values) {
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            for (int i = 0; i < values.length; i++) {
-                statement.setString(i + 1, values[i]);  // JDBC is 1-indexed
+        for (String field : fieldValueMap.keySet()) {
+            if (!allowedFields.contains(field)) {
+                throw new IllegalArgumentException("Invalid field: " + field);
             }
+        }
+
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM customer WHERE ");
+        String[] conditions = fieldValueMap.keySet().stream()
+            .map(field -> field + " = ?")
+            .toArray(String[]::new);
+        queryBuilder.append(String.join(" AND ", conditions));
+
+        try (PreparedStatement statement = connection.prepareStatement(queryBuilder.toString())) {
+            int i = 1;
+            for (String value : fieldValueMap.values()) {
+                statement.setString(i++, value);
+            }
+
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return Optional.of(extractCustomer(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataAccessException("Failed to fetch customer with query: " + query, e);
+            throw new DataAccessException("Failed to find customer with fields: " + fieldValueMap, e);
         }
+
         return Optional.empty();
     }
+ }
 
-
-
-    private Customer extractCustomer(ResultSet rs) throws SQLException {
-        return new Customer(
-                rs.getInt("id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("email"),
-                rs.getString("phone"),
-                rs.getString("address")
-        );
-    }
-
-}

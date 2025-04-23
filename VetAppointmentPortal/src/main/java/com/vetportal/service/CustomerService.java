@@ -39,9 +39,9 @@ public class CustomerService {
      * @param phone the phone number to search for
      * @return a service response containing the result of the lookup
      */
-    public ServiceResponse<Customer> findCustomerByPhone(String phone) {
+    public ServiceResponse<Customer> findCustomerByFields(Map<String, String> fields) {
         try {
-            Optional<Customer> result = customerDAO.findByPhone(phone);
+            Optional<Customer> result = customerDAO.findByFields(fields);
             return result.map(ServiceResponse::success)
                     .orElseGet(() -> ServiceResponse.notFound("Customer not found with phone: " + phone));
         } catch (DataAccessException e) {

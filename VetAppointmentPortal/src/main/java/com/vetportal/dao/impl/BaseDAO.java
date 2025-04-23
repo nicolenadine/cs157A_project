@@ -89,4 +89,43 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         }
         return entities;
     }
+
+    // Ever subclass needs to define how to extract their entity from a ResultSet
+    protected abstract T extractEntityFromResultSet(ResultSet rs) throws SQLException;
+
+
+    public Optional<T> findByFields(Map<String, String> fieldValueMap, Set<String> allowedFields, String tableName) {
+        if (fieldValueMap.isEmpty()) {
+            throw new IllegalArgumentException("At least one field must be provided for search.");
+        }
+
+        for (String field : fieldValueMap.keySet()) {
+            if (!allowedFields.contains(field)) {
+                throw new IllegalArgumentException("Invalid field: " + field);
+            }
+        }
+
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName + " WHERE ");
+        String[] conditions = fieldValueMap.keySet().stream()
+            .map(field -> field + " = ?")
+            .toArray(String[]::new);
+        queryBuilder.append(String.join(" AND ", conditions));
+
+        try (PreparedStatement statement = connection.prepareStatement(queryBuilder.toString())) {
+            int i = 1;
+            for (String value : fieldValueMap.values()) {
+                statement.setString(i++, value);
+            }
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return Optional.of(extractEntityFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to find entity with fields: " + fieldValueMap, e);
+        }
+
+        return Optional.empty();
+    }
+
 }
