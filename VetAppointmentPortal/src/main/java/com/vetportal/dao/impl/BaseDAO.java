@@ -1,28 +1,62 @@
 package com.vetportal.dao.impl;
 import com.vetportal.dao.interfaces.GenericDAO;
+import com.vetportal.exception.DataAccessException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected Connection connection;
 
-    protected abstract String getCreateQuery();
-    protected abstract String getUpdateQuery();
-    protected abstract String getDeleteQuery();
-    protected abstract String getFindByIdQuery();
-    protected abstract String getFindAllQuery();
+    // Subclasses need to define their table name, fields in db order, and allowed fields set
+    protected abstract String getTableName();
+    protected abstract List<String> getOrderedAttributes();
+    protected abstract Set<String> getAllowedAttributes();
 
+    //Subclasses define based on their specific attributes
     protected abstract void setCreateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract void setUpdateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract T extractEntityFromResultSet(ResultSet rs) throws SQLException;
 
     public BaseDAO(Connection connection) {
         this.connection = connection;
+    }
+
+    protected String getCreateQuery() {
+        String table = getTableName();
+        List<String> fields = getOrderedAttributes();
+
+        String columns = String.join(", ", fields);
+        String placeholders = String.join(", ", Collections.nCopies(fields.size(), "?"));
+
+        return "INSERT INTO " + table + " (" + columns + ") VALUES (" + placeholders + ")";
+    }
+
+    protected String getUpdateQuery() {
+        String table = getTableName();
+        List<String> fields = getOrderedAttributes();
+
+        String assignments = fields.stream()
+                .map(f -> f + " = ?")
+                .collect(Collectors.joining(", "));
+
+        return "UPDATE " + table + " SET " + assignments + " WHERE id = ?";
+    }
+
+    protected String getDeleteQuery() {
+        return "DELETE FROM " + getTableName() + " WHERE id = ?";
+    }
+
+    protected String getFindByIdQuery() {
+        return "SELECT * FROM " + getTableName() + " WHERE id = ?";
+    }
+
+    protected String getFindAllQuery() {
+        return "SELECT * FROM " + getTableName();
     }
 
     @Override
@@ -63,18 +97,10 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
 
     @Override
     public T findByID(Integer id) {
-        try (PreparedStatement statement = connection.prepareStatement(getFindByIdQuery())) {
-            statement.setInt(1, id);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    return extractEntityFromResultSet(rs);
-                }
-            }
-        } catch (SQLException e) {
-            // Log exception
-        }
-        return null;
+        return findByFields(Map.of("id", String.valueOf(id)))
+                .orElse(null);  // preserve original return type
     }
+
 
     @Override
     public List<T> findAll() {
@@ -90,42 +116,46 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         return entities;
     }
 
-    // Ever subclass needs to define how to extract their entity from a ResultSet
-    protected abstract T extractEntityFromResultSet(ResultSet rs) throws SQLException;
 
+    public Optional<T> findByFields(Map<String, String> fields) {
+        Set<String> allowedFields = getAllowedAttributes();
+        String tableName = getTableName();
 
-    public Optional<T> findByFields(Map<String, String> fieldValueMap, Set<String> allowedFields, String tableName) {
-        if (fieldValueMap.isEmpty()) {
-            throw new IllegalArgumentException("At least one field must be provided for search.");
+        if (fields.isEmpty()) {
+            throw new IllegalArgumentException("At least one field must be specified");
         }
 
-        for (String field : fieldValueMap.keySet()) {
-            if (!allowedFields.contains(field)) {
-                throw new IllegalArgumentException("Invalid field: " + field);
+        for (String key : fields.keySet()) {
+            if (!allowedFields.contains(key)) {
+                throw new IllegalArgumentException("Invalid field: " + key);
             }
         }
 
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName + " WHERE ");
-        String[] conditions = fieldValueMap.keySet().stream()
-            .map(field -> field + " = ?")
-            .toArray(String[]::new);
-        queryBuilder.append(String.join(" AND ", conditions));
+        String query = buildSelectQuery(fields, tableName);
 
-        try (PreparedStatement statement = connection.prepareStatement(queryBuilder.toString())) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
             int i = 1;
-            for (String value : fieldValueMap.values()) {
-                statement.setString(i++, value);
+            for (String value : fields.values()) {
+                stmt.setString(i++, value);
             }
 
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return Optional.of(extractEntityFromResultSet(rs));
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to find entity with fields: " + fieldValueMap, e);
+            throw new DataAccessException("Query error for: " + fields, e);
         }
 
         return Optional.empty();
     }
+
+    private String buildSelectQuery(Map<String, String> fields, String tableName) {
+        String[] conditions = fields.keySet().stream()
+                .map(field -> field + " = ?")
+                .toArray(String[]::new);
+        return "SELECT * FROM " + tableName + " WHERE " + String.join(" AND ", conditions);
+    }
+
 
 }

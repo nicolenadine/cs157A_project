@@ -7,6 +7,7 @@ import com.vetportal.model.Customer;
 
 import java.util.Optional;
 import java.sql.Connection;
+import java.util.Map;
 
 /**
  * Service layer responsible for customer-related business logic.
@@ -43,7 +44,7 @@ public class CustomerService {
         try {
             Optional<Customer> result = customerDAO.findByFields(fields);
             return result.map(ServiceResponse::success)
-                    .orElseGet(() -> ServiceResponse.notFound("Customer not found with phone: " + phone));
+                    .orElseGet(() -> ServiceResponse.notFound("Customer not found with phone: " + fields));
         } catch (DataAccessException e) {
             return ServiceResponse.dbError("Database error: " + e.getMessage());
         }
