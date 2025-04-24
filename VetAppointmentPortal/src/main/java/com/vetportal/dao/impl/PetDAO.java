@@ -105,38 +105,18 @@ public class PetDAO extends BaseDAO<Pet> {
         return pets;
     }
 
-    // LOGGING VERSION REMOVE LATER
     @Override
     protected String buildSelectQuery(Map<String, String> dbFields) {
         String[] conditions = dbFields.keySet().stream()
                 .map(field -> "p." + field + " = ?")
                 .toArray(String[]::new);
 
-        String sql = """
+        return """
         SELECT p.*, c.*
         FROM Pet p
         JOIN Customer c ON p.owner = c.customer_id
         WHERE %s
     """.formatted(String.join(" AND ", conditions));
-
-        // ✅ Add logging here
-        System.out.println("Generated SQL (PetDAO): " + sql);
-
-        return sql;
     }
-
-//    @Override
-//    protected String buildSelectQuery(Map<String, String> dbFields) {
-//        String[] conditions = dbFields.keySet().stream()
-//                .map(field -> "p." + field + " = ?")
-//                .toArray(String[]::new);
-//
-//        return """
-//        SELECT p.*, c.*
-//        FROM Pet p
-//        JOIN Customer c ON p.owner = c.customer_id
-//        WHERE %s
-//    """.formatted(String.join(" AND ", conditions));
-//    }
 
 }

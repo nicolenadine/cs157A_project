@@ -130,29 +130,15 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
 
         // 3. Execute the query and map results
         return executeQuery(query, dbFields.values().toArray());
-    }
+    }git
 
-    // LOGGING VERSION REMOVE LATER
     protected String buildSelectQuery(Map<String, String> dbFields) {
         String[] conditions = dbFields.keySet().stream()
                 .map(field -> field + " = ?")
                 .toArray(String[]::new);
 
-        String sql = "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
-
-        System.out.println("Generated SQL (BaseDAO): " + sql);
-
-        return sql;
+        return "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
     }
-
-
-//    protected String buildSelectQuery(Map<String, String> dbFields) {
-//        String[] conditions = dbFields.keySet().stream()
-//                .map(field -> field + " = ?")
-//                .toArray(String[]::new);
-//
-//        return "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
-//    }
 
     protected Optional<T> executeQuery(String query, Object[] params) {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
