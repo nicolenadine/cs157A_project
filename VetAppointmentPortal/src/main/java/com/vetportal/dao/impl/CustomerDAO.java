@@ -1,5 +1,6 @@
 package com.vetportal.dao.impl;
 
+import com.vetportal.mapper.CustomerMapper;
 import com.vetportal.model.Customer;
 
 import java.sql.Connection;
@@ -11,14 +12,7 @@ import java.util.Set;
 
 public class CustomerDAO extends BaseDAO<Customer> {
 
-    public CustomerDAO(Connection connection) {
-        super(connection);
-    }
-
-    @Override
-    protected String getTableName() {
-        return "customer";
-    }
+    public CustomerDAO(Connection connection) {super(connection, new CustomerMapper());}
 
     @Override
     protected List<String> getOrderedAttributes() {
@@ -27,7 +21,7 @@ public class CustomerDAO extends BaseDAO<Customer> {
 
     @Override
     protected Set<String> getAllowedAttributes() {
-        return Set.of("customer_id",  "first_name", "last_name", "email", "phone", "address");
+        return Set.of("customer_id", "first_name", "last_name", "email", "phone", "address");
     }
 
     @Override
@@ -47,18 +41,6 @@ public class CustomerDAO extends BaseDAO<Customer> {
         statement.setString(4, customer.getPhone());
         statement.setString(5, customer.getAddress());
         statement.setInt(6, customer.getId());
-    }
-
-    @Override
-    protected Customer extractEntityFromResultSet(ResultSet rs) throws SQLException {
-        return new Customer(
-                rs.getInt("id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("email"),
-                rs.getString("phone"),
-                rs.getString("address")
-        );
     }
 
 }

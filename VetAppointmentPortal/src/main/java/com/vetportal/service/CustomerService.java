@@ -1,10 +1,13 @@
 package com.vetportal.service;
 
+import com.vetportal.dao.impl.PetDAO;
 import com.vetportal.dto.ServiceResponse;
 import com.vetportal.dao.impl.CustomerDAO;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
+import com.vetportal.model.Pet;
 
+import java.util.List;
 import java.util.Optional;
 import java.sql.Connection;
 import java.util.Map;
@@ -17,6 +20,7 @@ import java.util.Map;
  */
 public class CustomerService {
     private CustomerDAO customerDAO;
+    private PetDAO petDAO;
 
     /**
      * Constructs a new CustomerService using the given database connection.
@@ -25,6 +29,7 @@ public class CustomerService {
      */
     public CustomerService(Connection conn) {
         this.customerDAO = new CustomerDAO(conn);
+        this.petDAO = new PetDAO(conn, this.customerDAO);
     }
 
     /**
@@ -37,7 +42,6 @@ public class CustomerService {
      *     <li>{@code DB_ERROR} if a database access error occurs</li>
      * </ul>
      *
-     * @param phone the phone number to search for
      * @return a service response containing the result of the lookup
      */
     public ServiceResponse<Customer> findCustomerByFields(Map<String, String> fields) {
@@ -49,4 +53,17 @@ public class CustomerService {
             return ServiceResponse.dbError("Database error: " + e.getMessage());
         }
     }
+
+    public ServiceResponse<List<Pet>> findPetsByCustomerId(int customerID) {
+        try {
+            List<Pet> pets = petDAO.findAllPetsByCustomerId(customerID);
+            if (pets.isEmpty()) {
+                return ServiceResponse.notFound("No pets found for customer ID " + customerID);
+            }
+            return ServiceResponse.success(pets);
+        } catch (Exception e) {
+            return ServiceResponse.dbError("Error retrieving pets for customer ID " + customerID + ": " + e.getMessage());
+        }
+    }
+
 }

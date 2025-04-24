@@ -1,5 +1,6 @@
 package com.vetportal.dao.impl;
 
+import com.vetportal.mapper.PetMapper;
 import com.vetportal.model.Customer;
 import com.vetportal.dao.impl.CustomerDAO;
 import com.vetportal.model.Pet;
@@ -9,42 +10,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class PetDAO extends BaseDAO<Pet> {
 
     private final CustomerDAO customerDAO;
 
     public PetDAO(Connection connection, CustomerDAO customerDAO) {
-        super(connection);
+        super(connection, new PetMapper());
         this.customerDAO = customerDAO;
     }
 
     @Override
-    protected String getTableName() {
-        return "pet";
-    }
-
-    @Override
     protected List<String> getOrderedAttributes() {
-        return List.of("pet_id", "name", "species", "breed", "birth_date", "customer_id"); // Exclude pet_id
+        return List.of("pet_id", "name", "species", "breed", "birth_date", "owner");
     }
 
     @Override
     protected Set<String> getAllowedAttributes() {
-        return Set.of("pet_id", "name", "species", "breed", "birth_date", "customer_id");
+        return Set.of("pet_id", "name", "species", "breed", "birth_date", "owner");
     }
 
     @Override
     protected void setCreateStatement(PreparedStatement statement, Pet pet) throws SQLException {
-        statement.setInt(5, pet.getOwner().getId());
-        statement.setString(1, pet.getName());
-        statement.setString(2, pet.getSpecies());
-        statement.setString(3, pet.getBreed());
-        statement.setDate(4, java.sql.Date.valueOf(pet.getBirthDate())); // assuming LocalDate
+        statement.setInt(1, pet.getId());
+        statement.setString(2, pet.getName());
+        statement.setString(3, pet.getSpecies());
+        statement.setString(4, pet.getBreed());
+        statement.setDate(5, java.sql.Date.valueOf(pet.getBirthDate()));
+        statement.setInt(6, pet.getOwner().getId());
     }
 
     @Override
@@ -57,29 +51,13 @@ public class PetDAO extends BaseDAO<Pet> {
         statement.setInt(6, pet.getId());
     }
 
-    @Override
-    protected Pet extractEntityFromResultSet(ResultSet rs) throws SQLException {
-
-        int customerId = rs.getInt("customer_id");
-
-        Customer owner = customerDAO.findByID(customerId); // assumes this returns a full Customer
-
-        return new Pet(
-                rs.getInt("pet_id"),
-                rs.getString("name"),
-                rs.getString("species"),
-                rs.getString("breed"),
-                rs.getDate("birth_date").toString(),
-                owner
-        );
-    }
 
     public Optional<Pet> findPetByIdAndCustomerId(int petId, int customerId) {
         String sql = """
         SELECT p.*, c.*
-        FROM pet p
-        JOIN customer c ON p.customer_id = c.id
-        WHERE p.pet_id = ? AND p.customer_id = ?
+        FROM Pet p
+        JOIN Customer c ON p.owner = c.id
+        WHERE p.pet_id = ? AND p.owner= ?
     """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -88,7 +66,9 @@ public class PetDAO extends BaseDAO<Pet> {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                Pet pet = extractEntityFromResultSet(rs);
+
+                Pet pet = mapper.mapResultSetToEntity(rs);
+
                 return Optional.of(pet);
             }
 
@@ -102,9 +82,9 @@ public class PetDAO extends BaseDAO<Pet> {
     public List<Pet> findAllPetsByCustomerId(int customerId) {
         String sql = """
         SELECT p.*, c.*
-        FROM pet p
-        JOIN customer c ON p.customer_id = c.id
-        WHERE p.customer_id = ?
+        FROM Pet p
+        JOIN Customer c ON p.owner = c.customer_id
+        WHERE p.owner = ?
     """;
 
         List<Pet> pets = new ArrayList<>();
@@ -114,24 +94,7 @@ public class PetDAO extends BaseDAO<Pet> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Customer owner = new Customer(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("phone"),
-                        rs.getString("address")
-                );
-
-                Pet pet = new Pet(
-                        rs.getInt("pet_id"),
-                        rs.getString("name"),
-                        rs.getString("species"),
-                        rs.getString("breed"),
-                        rs.getDate("birth_date").toString(),
-                        owner
-                );
-
+                Pet pet = mapper.mapResultSetToEntity(rs);
                 pets.add(pet);
             }
 
@@ -142,5 +105,38 @@ public class PetDAO extends BaseDAO<Pet> {
         return pets;
     }
 
+    // LOGGING VERSION REMOVE LATER
+    @Override
+    protected String buildSelectQuery(Map<String, String> dbFields) {
+        String[] conditions = dbFields.keySet().stream()
+                .map(field -> "p." + field + " = ?")
+                .toArray(String[]::new);
+
+        String sql = """
+        SELECT p.*, c.*
+        FROM Pet p
+        JOIN Customer c ON p.owner = c.customer_id
+        WHERE %s
+    """.formatted(String.join(" AND ", conditions));
+
+        // ✅ Add logging here
+        System.out.println("Generated SQL (PetDAO): " + sql);
+
+        return sql;
+    }
+
+//    @Override
+//    protected String buildSelectQuery(Map<String, String> dbFields) {
+//        String[] conditions = dbFields.keySet().stream()
+//                .map(field -> "p." + field + " = ?")
+//                .toArray(String[]::new);
+//
+//        return """
+//        SELECT p.*, c.*
+//        FROM Pet p
+//        JOIN Customer c ON p.owner = c.customer_id
+//        WHERE %s
+//    """.formatted(String.join(" AND ", conditions));
+//    }
 
 }

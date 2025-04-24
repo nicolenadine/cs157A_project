@@ -1,5 +1,7 @@
 package com.vetportal.dao.impl;
+
 import com.vetportal.dao.interfaces.GenericDAO;
+import com.vetportal.mapper.EntityMapper;
 import com.vetportal.exception.DataAccessException;
 
 import java.sql.Connection;
@@ -11,54 +13,55 @@ import java.util.stream.Collectors;
 
 public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected Connection connection;
+    protected EntityMapper<T> mapper;
 
     // Subclasses need to define their table name, fields in db order, and allowed fields set
-    protected abstract String getTableName();
     protected abstract List<String> getOrderedAttributes();
     protected abstract Set<String> getAllowedAttributes();
 
     //Subclasses define based on their specific attributes
     protected abstract void setCreateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract void setUpdateStatement(PreparedStatement statement, T entity) throws SQLException;
-    protected abstract T extractEntityFromResultSet(ResultSet rs) throws SQLException;
 
-    public BaseDAO(Connection connection) {
+    public BaseDAO(Connection connection, EntityMapper<T> mapper) {
         this.connection = connection;
+        this.mapper = mapper;
     }
 
     protected String getCreateQuery() {
-        String table = getTableName();
+        String tableName = mapper.getTableName();
         List<String> fields = getOrderedAttributes();
 
         String columns = String.join(", ", fields);
         String placeholders = String.join(", ", Collections.nCopies(fields.size(), "?"));
 
-        return "INSERT INTO " + table + " (" + columns + ") VALUES (" + placeholders + ")";
+        return "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + placeholders + ")";
     }
 
     protected String getUpdateQuery() {
-        String table = getTableName();
+        String tableName = mapper.getTableName();
         List<String> fields = getOrderedAttributes();
 
         String assignments = fields.stream()
                 .map(f -> f + " = ?")
                 .collect(Collectors.joining(", "));
 
-        return "UPDATE " + table + " SET " + assignments + " WHERE id = ?";
+        return "UPDATE " + tableName + " SET " + assignments + " WHERE id = ?";
     }
 
     protected String getDeleteQuery() {
-        return "DELETE FROM " + getTableName() + " WHERE id = ?";
+        return "DELETE FROM " + mapper.getTableName() + " WHERE id = ?";
     }
 
     protected String getFindByIdQuery() {
-        return "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        return "SELECT * FROM " + mapper.getTableName() + " WHERE id = ?";
     }
 
     protected String getFindAllQuery() {
-        return "SELECT * FROM " + getTableName();
+        return "SELECT * FROM " + mapper.getTableName();
     }
 
+    // -------------------  BASIC CRUD OPERATIONS -----------
     @Override
     public boolean create(T entity) {
         try (PreparedStatement statement = connection.prepareStatement(getCreateQuery())) {
@@ -95,12 +98,12 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         }
     }
 
+    // ----------------- SEARCH QUERIES ------------------
     @Override
     public T findByID(Integer id) {
         return findByFields(Map.of("id", String.valueOf(id)))
                 .orElse(null);  // preserve original return type
     }
-
 
     @Override
     public List<T> findAll() {
@@ -108,53 +111,79 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         try (PreparedStatement statement = connection.prepareStatement(getFindAllQuery());
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
-                entities.add(extractEntityFromResultSet(rs));
+                entities.add(mapper.mapResultSetToEntity(rs));
             }
         } catch (SQLException e) {
-            // Log exception
+            // Log or rethrow exception
+            throw new DataAccessException("Error fetching all records from " + mapper.getTableName(), e);
         }
         return entities;
     }
 
 
-    public Optional<T> findByFields(Map<String, String> fields) {
-        Set<String> allowedFields = getAllowedAttributes();
-        String tableName = getTableName();
+    public Optional<T> findByFields(Map<String, String> javaFields) {
+        // 1. Map Java field names to DB column names
+        Map<String, String> dbFields = translateFieldNames(javaFields);
 
-        if (fields.isEmpty()) {
-            throw new IllegalArgumentException("At least one field must be specified");
-        }
+        // 2. Build the query
+        String query = buildSelectQuery(dbFields);
 
-        for (String key : fields.keySet()) {
-            if (!allowedFields.contains(key)) {
-                throw new IllegalArgumentException("Invalid field: " + key);
-            }
-        }
+        // 3. Execute the query and map results
+        return executeQuery(query, dbFields.values().toArray());
+    }
 
-        String query = buildSelectQuery(fields, tableName);
+    // LOGGING VERSION REMOVE LATER
+    protected String buildSelectQuery(Map<String, String> dbFields) {
+        String[] conditions = dbFields.keySet().stream()
+                .map(field -> field + " = ?")
+                .toArray(String[]::new);
 
+        String sql = "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
+
+        System.out.println("Generated SQL (BaseDAO): " + sql);
+
+        return sql;
+    }
+
+
+//    protected String buildSelectQuery(Map<String, String> dbFields) {
+//        String[] conditions = dbFields.keySet().stream()
+//                .map(field -> field + " = ?")
+//                .toArray(String[]::new);
+//
+//        return "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
+//    }
+
+    protected Optional<T> executeQuery(String query, Object[] params) {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            int i = 1;
-            for (String value : fields.values()) {
-                stmt.setString(i++, value);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
             }
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractEntityFromResultSet(rs));
+                return Optional.of(mapper.mapResultSetToEntity(rs));
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Query error for: " + fields, e);
+            throw new DataAccessException("Query error", e);
         }
 
         return Optional.empty();
     }
 
-    private String buildSelectQuery(Map<String, String> fields, String tableName) {
-        String[] conditions = fields.keySet().stream()
-                .map(field -> field + " = ?")
-                .toArray(String[]::new);
-        return "SELECT * FROM " + tableName + " WHERE " + String.join(" AND ", conditions);
+    private Map<String, String> translateFieldNames(Map<String, String> javaFields) {
+        Map<String, String> dbFields = new HashMap<>();
+        Map<String, String> fieldMap = mapper.getJavaToDbFieldMap();
+
+        for (Map.Entry<String, String> entry : javaFields.entrySet()) {
+            String javaField = entry.getKey();
+            if (!fieldMap.containsKey(javaField)) {
+                throw new IllegalArgumentException("Invalid field: " + javaField);
+            }
+            dbFields.put(fieldMap.get(javaField), entry.getValue());
+        }
+
+        return dbFields;
     }
 
 

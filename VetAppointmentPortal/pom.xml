@@ -12,9 +12,13 @@
     <build>
         <resources>
             <resource>
-                <directory>VetAppointmentPortal/src/resources</directory>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.sql</include>
+                </includes>
             </resource>
         </resources>
+
         <!-- Move plugins inside <build> -->
         <plugins>
             <plugin>
@@ -58,6 +62,12 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

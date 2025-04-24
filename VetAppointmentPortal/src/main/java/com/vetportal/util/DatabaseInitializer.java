@@ -7,15 +7,15 @@ import java.sql.Statement;
 
 public class DatabaseInitializer {
 
-    public static void initializeDatabase(String schemaFile, String seedFile) {
+    public static void initializeDatabase(String schemaResource, String seedResource) {
         try (Connection conn = DbManager.getConnection()) {
 
-            // Execute schema.sql to create tables
-            executeSqlFile(conn, schemaFile);
+            // Execute schema.sql from resources
+            executeSqlFile(conn, schemaResource);
             System.out.println("Schema created successfully");
 
-            // Execute seed.sql to insert initial data
-            executeSqlFile(conn, seedFile);
+            // Execute seed.sql from resources
+            executeSqlFile(conn, seedResource);
             System.out.println("Seed data inserted successfully");
 
         } catch (SQLException | IOException e) {
@@ -24,8 +24,16 @@ public class DatabaseInitializer {
         }
     }
 
-    private static void executeSqlFile(Connection conn, String filePath) throws SQLException, IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    private static void executeSqlFile(Connection conn, String resourcePath) throws SQLException, IOException {
+        System.out.println("Attempting to load: " + resourcePath);
+
+        // Use class-relative resource loading — works in Java modules
+        InputStream input = DatabaseInitializer.class.getResourceAsStream("/" + resourcePath);
+        if (input == null) {
+            throw new FileNotFoundException(resourcePath + " not found in module resource path.");
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
             StringBuilder sb = new StringBuilder();
             String line;
 
@@ -38,6 +46,8 @@ public class DatabaseInitializer {
 
                 // Execute statement when semicolon is found
                 if (line.trim().endsWith(";")) {
+                    System.out.println("Executing SQL: " + sb.toString());
+
                     try (Statement stmt = conn.createStatement()) {
                         stmt.execute(sb.toString());
                         sb.setLength(0);
@@ -48,10 +58,9 @@ public class DatabaseInitializer {
     }
 
     public static void main(String[] args) {
-        // Path to schema and seed files
-        String schemaPath = "src/resources/database/schema.sql";
-        String seedPath = "src/resources/database/seed.sql";
+        String schemaResource = "database/schema.sql";
+        String seedResource = "database/seed.sql";
 
-        initializeDatabase(schemaPath, seedPath);
+        initializeDatabase(schemaResource, seedResource);
     }
 }

@@ -9,6 +9,9 @@ import com.vetportal.dto.ServiceResponse;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CustomerController {
 
     @FXML
@@ -32,13 +35,18 @@ public class CustomerController {
 
     private Customer fetchCustomerByPhone() {
         String phone = customerLookupField.getText();
-        ServiceResponse<Customer> response = customerService.findCustomerByPhone(phone);
+
+        // Create a map with the phone field
+        Map<String, String> fields = new HashMap<>();
+        fields.put("phone", phone);
+
+        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
 
         if (response.isSuccess()) {
-            return response.getData();  // return the actual Customer
+            return response.getData();  // gets the customer object if it exists
         } else {
             showAlert(response.getMessage());  // show the error
-            return null;  // make sure all code paths return something
+            return null;
         }
     }
 

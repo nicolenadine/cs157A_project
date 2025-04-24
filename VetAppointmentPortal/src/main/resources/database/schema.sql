@@ -1,3 +1,9 @@
+-- Clear existing data for testing
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS Pet;
+DROP TABLE IF EXISTS Customer;
+
 CREATE TABLE IF NOT EXISTS Customer (
                                          customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                          first_name VARCHAR(50) NOT NULL,
@@ -17,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Pet (
 
                                         CONSTRAINT fk_pet_customer
                                             FOREIGN KEY (owner)
-                                            REFERENCES customer(customer_id)
+                                            REFERENCES Customer(customer_id)
                                             ON DELETE CASCADE
                                             ON UPDATE CASCADE
 );
