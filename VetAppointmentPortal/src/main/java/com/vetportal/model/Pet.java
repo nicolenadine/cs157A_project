@@ -1,14 +1,14 @@
 package com.vetportal.model;
 
 public class Pet {
-    private int id;
+    private Integer id;
     private String name;
     private String species;
     private String breed;
     private String birthDate;
     private Customer owner;
 
-    public Pet(int id, String name, String species, String breed, String birthDate, Customer owner) {
+    public Pet(Integer id, String name, String species, String breed, String birthDate, Customer owner) {
         this.id = id;
         this.name = name;
         this.species = species;
@@ -17,11 +17,11 @@ public class Pet {
         this.owner = owner;
     }
 
-    public int getId() {
+    public int getID() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setID(int id) {
         this.id = id;
     }
 

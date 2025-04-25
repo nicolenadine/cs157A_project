@@ -25,7 +25,7 @@ public class TestDbConnection {
                     if (count > 0) {
                         System.out.println("Customer table exists!");
 
-                        // query the Customer table to verify data can be processed
+                        // query the Customer check data can be processed
                         String customerQuery = "SELECT * FROM Customer LIMIT 5";
                         try (Statement custStmt = connection.createStatement();
                              ResultSet custRs = custStmt.executeQuery(customerQuery)) {
@@ -46,7 +46,7 @@ public class TestDbConnection {
                 }
             }
 
-            // Close the connection when done
+            // Close the connection
             DbManager.closeConnection();
             System.out.println("\nDatabase connection closed.");
 

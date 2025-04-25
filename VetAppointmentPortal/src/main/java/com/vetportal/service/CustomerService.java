@@ -1,13 +1,13 @@
 package com.vetportal.service;
 
+import com.vetportal.dao.impl.CustomerDAO;
 import com.vetportal.dao.impl.PetDAO;
 import com.vetportal.dto.ServiceResponse;
-import com.vetportal.dao.impl.CustomerDAO;
+import com.vetportal.dao.impl.EmployeeDAO;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
 import com.vetportal.model.Pet;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Service layer responsible for customer-related business logic.
  * <p>
- * Delegates database operations to the {@link CustomerDAO} and wraps results in
+ * Delegates database operations to the {@link EmployeeDAO} and wraps results in
  * {@link ServiceResponse} objects to include status and error handling.
  */
 public class CustomerService {
@@ -46,10 +46,7 @@ public class CustomerService {
 
     }
 
-    public boolean updateCustomer(Customer customer) {
-            return customerDAO.update(customer);
-
-    }
+    public boolean updateCustomer(Customer customer) { return customerDAO.update(customer); }
 
     public boolean deleteCustomer(int customerID) {
         return customerDAO.delete(customerID);
@@ -65,13 +62,9 @@ public class CustomerService {
         } catch (Exception e) {
             return ServiceResponse.dbError("Error: " + e.getMessage());
         }
-
     }
 
-    public boolean updatePet(Pet pet) {
-        return petDAO.update(pet);
-
-    }
+    public boolean updatePet(Pet pet) { return petDAO.update(pet); }
 
     public boolean deletePet(int petID) {
         return petDAO.delete(petID);

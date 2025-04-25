@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public interface EntityMapper<T> {
-    Map<String, String> getJavaToDbFieldMap();
+    Map<String, String> getJavaToDbAttributeMap();
     String getTableName();
     T mapResultSetToEntity(ResultSet rs) throws SQLException;
 }

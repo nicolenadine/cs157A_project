@@ -47,6 +47,18 @@ public class ServiceResponse<T> {
         return new ServiceResponse<>(null, message, LookupStatus.NOT_FOUND);
     }
 
+
+    /**
+     * Creates a response indicating the requested item was not found.
+     *
+     * @param message a message describing missing data
+     * @return a ServiceResponse with status CONFLICT
+     */
+    public static <T> ServiceResponse<T> conflict(String message) {
+        return new ServiceResponse<>(null, message, LookupStatus.CONFLICT);
+    }
+
+
     /**
      * Creates a response indicating a database error occurred.
      *

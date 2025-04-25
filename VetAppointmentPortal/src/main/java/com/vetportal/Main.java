@@ -16,8 +16,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Initialize services
-        serviceManager = new ServiceManager();
+
+        serviceManager = new ServiceManager(); //singleton
 
         URL fxmlUrl = getClass().getResource("/fxml/main.fxml");
         if (fxmlUrl == null) {

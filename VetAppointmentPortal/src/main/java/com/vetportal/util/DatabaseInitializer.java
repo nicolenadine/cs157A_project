@@ -44,7 +44,7 @@ public class DatabaseInitializer {
                 }
                 sb.append(line);
 
-                // Execute statement when semicolon is found
+                // Execute statement when it gets to a semicolon
                 if (line.trim().endsWith(";")) {
                     System.out.println("Executing SQL: " + sb.toString());
 

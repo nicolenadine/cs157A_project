@@ -1,28 +1,36 @@
 package com.vetportal.model;
 
-public class Customer {
+public class Employee {
+
+    public enum Position {
+        RECEPTIONIST,
+        VETERINARIAN,
+        VET_TECH
+    }
+
     private Integer id;
     private String firstname;
     private String lastname;
     private String address;
-    private String phone;
     private String email;
+    private String phone;
+    private Position role;
 
-    public Customer(Integer id, String firstname, String lastname,String address, String phone, String email) {
+    public Employee(Integer id, String firstname, String lastname, String address, String email, String phone, Position role) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.address = address;
-        this.phone = phone;
         this.email = email;
-
+        this.phone = phone;
+        this.role = role;
     }
 
-    public int getID() {
+    public Integer getID() {
         return id;
     }
 
-    public void setID(int id) {
+    public void setID(Integer id) {
         this.id = id;
     }
 
@@ -30,7 +38,7 @@ public class Customer {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
+    public void setFirstName(String firstname) {
         this.firstname = firstname;
     }
 
@@ -38,7 +46,7 @@ public class Customer {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
+    public void setLastName(String lastname) {
         this.lastname = lastname;
     }
 
@@ -50,14 +58,6 @@ public class Customer {
         this.address = address;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -66,4 +66,19 @@ public class Customer {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Position getRole() {
+        return role;
+    }
+
+    public void setRole(Position role) {
+        this.role = role;
+    }
 }

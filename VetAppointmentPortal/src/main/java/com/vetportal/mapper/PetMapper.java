@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class PetMapper implements EntityMapper<Pet> {
     @Override
-    public Map<String, String> getJavaToDbFieldMap() {
+    public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", "pet_id");
         map.put("name", "pet_name");

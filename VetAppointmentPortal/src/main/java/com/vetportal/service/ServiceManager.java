@@ -69,7 +69,7 @@ public class ServiceManager {
                 System.out.println("Database connection closed.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();  // Optionally replace with logging
+            e.printStackTrace();
         }
     }
 }

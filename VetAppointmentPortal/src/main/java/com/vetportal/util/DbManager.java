@@ -10,8 +10,8 @@ public class DbManager {
 
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            // Initialize connection
-            connection = DriverManager.getConnection(URL);
+
+            connection = DriverManager.getConnection(URL); // Initialize connection
         }
         return connection;
     }

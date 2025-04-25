@@ -16,6 +16,11 @@ public enum LookupStatus {
     NOT_FOUND,
 
     /**
+     * Indicates that the action would create a conflict or violate a constraint
+     */
+    CONFLICT,
+
+    /**
      * Indicates that an error occurred during database access or processing.
      */
     DB_ERROR

@@ -1,8 +1,6 @@
 package com.vetportal.dao.impl;
 
 import com.vetportal.mapper.PetMapper;
-import com.vetportal.model.Customer;
-import com.vetportal.dao.impl.CustomerDAO;
 import com.vetportal.model.Pet;
 import com.vetportal.exception.DataAccessException;
 
@@ -14,7 +12,7 @@ import java.util.*;
 
 public class PetDAO extends BaseDAO<Pet> {
 
-    private final CustomerDAO customerDAO;
+    private CustomerDAO customerDAO;
 
     public PetDAO(Connection connection, CustomerDAO customerDAO) {
         super(connection, new PetMapper());
@@ -33,12 +31,12 @@ public class PetDAO extends BaseDAO<Pet> {
 
     @Override
     protected void setCreateStatement(PreparedStatement statement, Pet pet) throws SQLException {
-        statement.setInt(1, pet.getId());
+        statement.setInt(1, pet.getID());
         statement.setString(2, pet.getName());
         statement.setString(3, pet.getSpecies());
         statement.setString(4, pet.getBreed());
         statement.setDate(5, java.sql.Date.valueOf(pet.getBirthDate()));
-        statement.setInt(6, pet.getOwner().getId());
+        statement.setInt(6, pet.getOwner().getID());
     }
 
     @Override
@@ -47,8 +45,8 @@ public class PetDAO extends BaseDAO<Pet> {
         statement.setString(2, pet.getSpecies());
         statement.setString(3, pet.getBreed());
         statement.setDate(4, java.sql.Date.valueOf(pet.getBirthDate()));
-        statement.setInt(5, pet.getOwner().getId());
-        statement.setInt(6, pet.getId());
+        statement.setInt(5, pet.getOwner().getID());
+        statement.setInt(6, pet.getID());
     }
 
     public Optional<Pet> createPet(Pet pet) {
@@ -58,39 +56,10 @@ public class PetDAO extends BaseDAO<Pet> {
         Map<String, String> lookup = Map.of(
                 "pet_name", pet.getName(),
                 "birth_date", pet.getBirthDate(),
-                "owner", String.valueOf(pet.getOwner().getId())
+                "owner", String.valueOf(pet.getOwner().getID())
         );
 
         return findByAttributes(lookup);
-    }
-
-
-
-    public Optional<Pet> findPetByIdAndCustomerId(int petId, int customerId) {
-        String sql = """
-        SELECT p.*, c.*
-        FROM Pet p
-        JOIN Customer c ON p.owner = c.id
-        WHERE p.pet_id = ? AND p.owner= ?
-    """;
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, petId);
-            statement.setInt(2, customerId);
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-
-                Pet pet = mapper.mapResultSetToEntity(rs);
-
-                return Optional.of(pet);
-            }
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error finding pet by ID and customer ID", e);
-        }
-
-        return Optional.empty();
     }
 
     public List<Pet> findAllPetsByCustomerId(int customerId) {
@@ -134,3 +103,31 @@ public class PetDAO extends BaseDAO<Pet> {
     }
 
 }
+
+// Might need later but will delete if not.
+//public Optional<Pet> findPetByIdAndCustomerId(int petID, int customerID) {
+//    String sql = """
+//        SELECT p.*, c.*
+//        FROM Pet p
+//        JOIN Customer c ON p.owner = c.id
+//        WHERE p.pet_id = ? AND p.owner= ?
+//    """;
+//
+//    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+//        statement.setInt(1, petID);
+//        statement.setInt(2, customerID);
+//        ResultSet rs = statement.executeQuery();
+//
+//        if (rs.next()) {
+//
+//            Pet pet = mapper.mapResultSetToEntity(rs);
+//
+//            return Optional.of(pet);
+//        }
+//
+//    } catch (SQLException e) {
+//        throw new DataAccessException("Error finding pet by ID and customer ID", e);
+//    }
+//
+//    return Optional.empty();
+//}

@@ -8,10 +8,9 @@ public class SimpleDbTest {
         try {
             System.out.println("Attempting to connect to database...");
 
-            // Get connection
-            Connection conn = DbManager.getConnection();
+            Connection conn = DbManager.getConnection(); // Initialize connection
 
-            // Check if connected
+            // Check connection status
             boolean isConnected = !conn.isClosed();
             System.out.println("Database connection successful: " + isConnected);
 

@@ -70,7 +70,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            // Log exception
+
             return false;
         }
     }
@@ -102,10 +102,16 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
 
     // ----------------- SEARCH QUERIES ------------------
     @Override
-    public T findByID(Integer id) {
-        return findByAttributes(Map.of("id", String.valueOf(id)))
-                .orElse(null);  // preserve original return type
+    public Optional<T> findByID(Integer id) {
+        String dbIdField = mapper.getJavaToDbAttributeMap().get("id");
+        if (dbIdField == null) {
+            throw new IllegalStateException("Missing 'id' field mapping");
+        }
+
+        return findByAttributes(Map.of(dbIdField, String.valueOf(id)));
     }
+
+
 
     @Override
     public List<T> findAll() {
@@ -132,6 +138,31 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         // Execute the query and map results
         return executeQuery(query, dbAttributes.values().toArray());
     }
+
+    public List<T> findAllByAttributes(Map<String, String> attributes) {
+        List<T> results = new ArrayList<>();
+
+        Map<String, String> dbAttributes = translateAttributeNames(attributes);
+        String query = buildSelectQuery(dbAttributes);
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            int index = 1;
+            for (String value : dbAttributes.values()) {
+                statement.setObject(index++, value);
+            }
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                results.add(mapper.mapResultSetToEntity(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error fetching entities by attributes", e);
+        }
+
+        return results;
+    }
+
 
     protected String buildSelectQuery(Map<String, String> dbAttributes) {
         String[] conditions = dbAttributes.keySet().stream()
@@ -160,7 +191,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
 
     private Map<String, String> translateAttributeNames(Map<String, String> attributes) {
         Map<String, String> dbAttributes = new HashMap<>();
-        Map<String, String> attributeMap = mapper.getJavaToDbFieldMap();
+        Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
 
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             String attribute = entry.getKey();
