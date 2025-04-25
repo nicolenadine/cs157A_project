@@ -29,7 +29,7 @@ public class CustomerServiceTest {
     @Test
     public void testFindCustomerByPhone_success() {
         Map<String, String> fields = Map.of("phone", "555-0001");
-        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(fields);
         printFullResponse(response);
         assertTrue(response.isSuccess());
         assertNotNull(response.getData());
@@ -39,7 +39,7 @@ public class CustomerServiceTest {
     @Test
     public void testFindCustomerByPhone_notFound() {
         Map<String, String> fields = Map.of("phone", "999-9999");
-        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(fields);
         printFullResponse(response);
         assertFalse(response.isSuccess());
         assertNull(response.getData());
@@ -49,7 +49,7 @@ public class CustomerServiceTest {
     @Test
     public void testFindCustomerByFirstAndLastName_success() {
         Map<String, String> fields = Map.of("firstName", "Bob", "lastName", "Jones");
-        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(fields);
         printFullResponse(response);
         assertTrue(response.isSuccess());
         assertNotNull(response.getData());
@@ -60,7 +60,7 @@ public class CustomerServiceTest {
     @Test
     public void testFindCustomerByFirstAndLastName_notFound() {
         Map<String, String> fields = Map.of("firstName", "Nonexistent", "lastName", "User");
-        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(fields);
         printFullResponse(response);
         assertFalse(response.isSuccess());
         assertNull(response.getData());

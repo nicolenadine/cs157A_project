@@ -40,7 +40,7 @@ public class CustomerController {
         Map<String, String> fields = new HashMap<>();
         fields.put("phone", phone);
 
-        ServiceResponse<Customer> response = customerService.findCustomerByFields(fields);
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(fields);
 
         if (response.isSuccess()) {
             return response.getData();  // gets the customer object if it exists

@@ -7,6 +7,7 @@ import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
 import com.vetportal.model.Pet;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.sql.Connection;
@@ -32,6 +33,53 @@ public class CustomerService {
         this.petDAO = new PetDAO(conn, this.customerDAO);
     }
 
+    // --------  CUSTOMER CLASS CREATE, UPDATE, & DELETE METHODS --------
+
+    public ServiceResponse<Customer> createCustomer(Customer customer) {
+        try {
+            Optional<Customer> result = customerDAO.createCustomer(customer);
+            return result.map(ServiceResponse::success)
+                    .orElseGet(() -> ServiceResponse.notFound("Customer could not be created"));
+        } catch (Exception e) {
+            return ServiceResponse.dbError("Error: " + e.getMessage());
+        }
+
+    }
+
+    public boolean updateCustomer(Customer customer) {
+            return customerDAO.update(customer);
+
+    }
+
+    public boolean deleteCustomer(int customerID) {
+        return customerDAO.delete(customerID);
+    }
+
+    // --------  PET CLASS CREATE, UPDATE, & DELETE METHODS --------
+
+    public ServiceResponse<Pet> createPet(Pet pet) {
+        try {
+            Optional<Pet> result = petDAO.createPet(pet);
+            return result.map(ServiceResponse::success)
+                    .orElseGet(() -> ServiceResponse.notFound("Pet could not be created"));
+        } catch (Exception e) {
+            return ServiceResponse.dbError("Error: " + e.getMessage());
+        }
+
+    }
+
+    public boolean updatePet(Pet pet) {
+        return petDAO.update(pet);
+
+    }
+
+    public boolean deletePet(int petID) {
+        return petDAO.delete(petID);
+    }
+
+
+    // -----------------  QUERY METHODS  -----------------------
+
     /**
      * Looks up a customer by their phone number.
      * <p>
@@ -44,11 +92,11 @@ public class CustomerService {
      *
      * @return a service response containing the result of the lookup
      */
-    public ServiceResponse<Customer> findCustomerByFields(Map<String, String> fields) {
+    public ServiceResponse<Customer> findCustomerByAttributes(Map<String, String> attributes) {
         try {
-            Optional<Customer> result = customerDAO.findByFields(fields);
+            Optional<Customer> result = customerDAO.findByAttributes(attributes);
             return result.map(ServiceResponse::success)
-                    .orElseGet(() -> ServiceResponse.notFound("Customer not found with phone: " + fields));
+                    .orElseGet(() -> ServiceResponse.notFound("Customer not found with phone: " + attributes));
         } catch (DataAccessException e) {
             return ServiceResponse.dbError("Database error: " + e.getMessage());
         }
@@ -65,5 +113,6 @@ public class CustomerService {
             return ServiceResponse.dbError("Error retrieving pets for customer ID " + customerID + ": " + e.getMessage());
         }
     }
+
 
 }

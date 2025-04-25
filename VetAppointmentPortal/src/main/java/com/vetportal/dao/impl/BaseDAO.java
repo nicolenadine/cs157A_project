@@ -15,7 +15,13 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected Connection connection;
     protected EntityMapper<T> mapper;
 
-    // Subclasses need to define their table name, fields in db order, and allowed fields set
+    // Constructor
+    public BaseDAO(Connection connection, EntityMapper<T> mapper) {
+        this.connection = connection;
+        this.mapper = mapper;
+    }
+
+    // Subclasses need to define their table name, attributes in db order, and allowed attributes set
     protected abstract List<String> getOrderedAttributes();
     protected abstract Set<String> getAllowedAttributes();
 
@@ -23,26 +29,21 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected abstract void setCreateStatement(PreparedStatement statement, T entity) throws SQLException;
     protected abstract void setUpdateStatement(PreparedStatement statement, T entity) throws SQLException;
 
-    public BaseDAO(Connection connection, EntityMapper<T> mapper) {
-        this.connection = connection;
-        this.mapper = mapper;
-    }
-
     protected String getCreateQuery() {
         String tableName = mapper.getTableName();
-        List<String> fields = getOrderedAttributes();
+        List<String> orderedAttributes = getOrderedAttributes();
 
-        String columns = String.join(", ", fields);
-        String placeholders = String.join(", ", Collections.nCopies(fields.size(), "?"));
+        String columns = String.join(", ", orderedAttributes);
+        String placeholders = String.join(", ", Collections.nCopies(orderedAttributes.size(), "?"));
 
         return "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + placeholders + ")";
     }
 
     protected String getUpdateQuery() {
         String tableName = mapper.getTableName();
-        List<String> fields = getOrderedAttributes();
+        List<String> orderedAttributes = getOrderedAttributes();
 
-        String assignments = fields.stream()
+        String assignments = orderedAttributes.stream()
                 .map(f -> f + " = ?")
                 .collect(Collectors.joining(", "));
 
@@ -88,12 +89,13 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
 
     @Override
     public boolean delete(Integer id) {
+
         try (PreparedStatement statement = connection.prepareStatement(getDeleteQuery())) {
             statement.setInt(1, id);
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
+
         } catch (SQLException e) {
-            // Log exception
             return false;
         }
     }
@@ -101,7 +103,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     // ----------------- SEARCH QUERIES ------------------
     @Override
     public T findByID(Integer id) {
-        return findByFields(Map.of("id", String.valueOf(id)))
+        return findByAttributes(Map.of("id", String.valueOf(id)))
                 .orElse(null);  // preserve original return type
     }
 
@@ -110,30 +112,29 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         List<T> entities = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(getFindAllQuery());
              ResultSet rs = statement.executeQuery()) {
-            while (rs.next()) {
-                entities.add(mapper.mapResultSetToEntity(rs));
+                 while (rs.next()) {
+                    entities.add(mapper.mapResultSetToEntity(rs));
             }
         } catch (SQLException e) {
-            // Log or rethrow exception
             throw new DataAccessException("Error fetching all records from " + mapper.getTableName(), e);
         }
         return entities;
     }
 
 
-    public Optional<T> findByFields(Map<String, String> javaFields) {
-        // 1. Map Java field names to DB column names
-        Map<String, String> dbFields = translateFieldNames(javaFields);
+    public Optional<T> findByAttributes(Map<String, String> attributes) {
+        // Map object attribute names to DB column names
+        Map<String, String> dbAttributes = translateAttributeNames(attributes);
 
-        // 2. Build the query
-        String query = buildSelectQuery(dbFields);
+        // Build the query
+        String query = buildSelectQuery(dbAttributes);
 
-        // 3. Execute the query and map results
-        return executeQuery(query, dbFields.values().toArray());
-    }git
+        // Execute the query and map results
+        return executeQuery(query, dbAttributes.values().toArray());
+    }
 
-    protected String buildSelectQuery(Map<String, String> dbFields) {
-        String[] conditions = dbFields.keySet().stream()
+    protected String buildSelectQuery(Map<String, String> dbAttributes) {
+        String[] conditions = dbAttributes.keySet().stream()
                 .map(field -> field + " = ?")
                 .toArray(String[]::new);
 
@@ -141,35 +142,35 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     }
 
     protected Optional<T> executeQuery(String query, Object[] params) {
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < params.length; i++) {
-                stmt.setObject(i + 1, params[i]);
+                statement.setObject(i + 1, params[i]);
             }
 
-            ResultSet rs = stmt.executeQuery();
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return Optional.of(mapper.mapResultSetToEntity(rs));
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Query error", e);
+            throw new DataAccessException("Could not insert customer", e);
         }
 
         return Optional.empty();
     }
 
-    private Map<String, String> translateFieldNames(Map<String, String> javaFields) {
-        Map<String, String> dbFields = new HashMap<>();
-        Map<String, String> fieldMap = mapper.getJavaToDbFieldMap();
+    private Map<String, String> translateAttributeNames(Map<String, String> attributes) {
+        Map<String, String> dbAttributes = new HashMap<>();
+        Map<String, String> attributeMap = mapper.getJavaToDbFieldMap();
 
-        for (Map.Entry<String, String> entry : javaFields.entrySet()) {
-            String javaField = entry.getKey();
-            if (!fieldMap.containsKey(javaField)) {
-                throw new IllegalArgumentException("Invalid field: " + javaField);
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            String attribute = entry.getKey();
+            if (!attributeMap.containsKey(attribute)) {
+                throw new IllegalArgumentException("Invalid Attribute: " + attribute);
             }
-            dbFields.put(fieldMap.get(javaField), entry.getValue());
+            dbAttributes.put(attributeMap.get(attribute), entry.getValue());
         }
 
-        return dbFields;
+        return dbAttributes;
     }
 
 

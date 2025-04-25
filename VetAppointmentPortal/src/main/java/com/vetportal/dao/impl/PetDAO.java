@@ -51,6 +51,20 @@ public class PetDAO extends BaseDAO<Pet> {
         statement.setInt(6, pet.getId());
     }
 
+    public Optional<Pet> createPet(Pet pet) {
+        boolean inserted = super.create(pet);
+        if (!inserted) return Optional.empty();
+
+        Map<String, String> lookup = Map.of(
+                "pet_name", pet.getName(),
+                "birth_date", pet.getBirthDate(),
+                "owner", String.valueOf(pet.getOwner().getId())
+        );
+
+        return findByAttributes(lookup);
+    }
+
+
 
     public Optional<Pet> findPetByIdAndCustomerId(int petId, int customerId) {
         String sql = """

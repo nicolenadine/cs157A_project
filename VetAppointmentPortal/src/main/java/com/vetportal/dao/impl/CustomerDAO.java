@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class CustomerDAO extends BaseDAO<Customer> {
@@ -43,5 +45,13 @@ public class CustomerDAO extends BaseDAO<Customer> {
         statement.setInt(6, customer.getId());
     }
 
+    public Optional<Customer> createCustomer(Customer customer) {
+            boolean inserted = super.create(customer);
+            if (!inserted) {return Optional.empty(); }
+
+            Map<String, String> newCustomerPhone = Map.of("phone", customer.getPhone());
+
+            return findByAttributes(newCustomerPhone);
+    }
 }
 
