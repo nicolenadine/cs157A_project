@@ -19,9 +19,9 @@ public class Main extends Application {
 
         serviceManager = new ServiceManager(); //singleton
 
-        URL fxmlUrl = getClass().getResource("/fxml/main.fxml");
+        URL fxmlUrl = getClass().getResource("/fxml/Menu.fxml");
         if (fxmlUrl == null) {
-            throw new IllegalStateException("FXML file not found: /fxml/main.fxml");
+            throw new IllegalStateException("FXML file not found: /fxml/Menu.fxml");
         }
 
         Parent root = FXMLLoader.load(fxmlUrl);

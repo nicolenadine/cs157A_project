@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="mainBox" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.MenuController">
+
+   <children>
+      <AnchorPane prefWidth="300.0" style="-fx-background-color: gray;">
+         <children>
+            <Button layoutX="15" layoutY="15" onAction="#showHome" text="Home">
+               <font><Font size="15.0" /></font>
+            </Button>
+            <Button layoutX="55" layoutY="475" onAction="#showAddAppointment" prefHeight="40.0" prefWidth="180.0" text="Add Appointment">
+               <font><Font name="Apple SD Gothic Neo Regular" size="15.0" /></font>
+            </Button>
+            <Button layoutX="55" layoutY="575.0" onAction="#showEditAppointment" prefHeight="40.0" prefWidth="180.0" text="Edit Appointment">
+               <font><Font size="15.0" /></font>
+            </Button>
+            <Button layoutX="55" layoutY="675" onAction="#showDeleteAppointment" prefHeight="40.0" prefWidth="180.0" text="Delete Appointment">
+               <font><Font size="15.0" /></font>
+            </Button>
+
+            <Label layoutX="65.0" layoutY="315" text="Hello, User!">
+               <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
+            </Label>
+
+            <Label layoutX="70.0" layoutY="375.0" text="Date/Time">
+               <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
+            </Label>
+
+            <Circle fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="85.0" stroke="BLACK" />
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>

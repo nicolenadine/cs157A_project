@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.HomeController">
+    <children>
+        <TableView layoutX="115.0" layoutY="135.0" prefHeight="290.0" prefWidth="699.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+            </columns>
+        </TableView>
+
+        <Label layoutX="185.0" layoutY="15.0" text="Vet Appointment Portal">
+            <font>
+                <Font name="Apple SD Gothic Neo ExtraBold" size="50.0" />
+            </font>
+        </Label>
+
+        <Label layoutX="95.0" layoutY="100.0" text="Today's Appointments">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="20.0" />
+            </font>
+        </Label>
+
+        <TableView layoutX="115.0" layoutY="480.0" prefHeight="290.0" prefWidth="699.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+            </columns>
+        </TableView>
+
+        <Label layoutX="95.0" layoutY="445.0" text="Available Appointments">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="20.0" />
+            </font>
+        </Label>
+
+        <DatePicker layoutX="630.0" layoutY="100.0" />
+        <DatePicker layoutX="630.0" layoutY="445.0" />
+    </children>
+</AnchorPane>
