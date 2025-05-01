@@ -29,13 +29,13 @@ public class MenuController {
     }
 
     @FXML
-    public void showEditAppointment() {
-        FXUtil.setPage("/fxml/EditAppointment.fxml");
+    public void showCustomerSearch() {
+        FXUtil.setPage("/fxml/CustomerSearch.fxml");
     }
 
     @FXML
-    public void showDeleteAppointment() {
-        FXUtil.setPage("/fxml/DeleteAppointment.fxml");
+    public void showAppointmentSearch() {
+        FXUtil.setPage("/fxml/AppointmentSearch.fxml");
     }
 
     @FXML

@@ -11,7 +11,7 @@
                 <Font name="Apple SD Gothic Neo ExtraBold" size="50.0" />
             </font>
         </Label>
-        <Label layoutX="237.0" layoutY="373.0" text="Appointment Creation...">
+        <Label layoutX="256.0" layoutY="371.0" text="Searching appointment...">
             <font>
                 <Font name="Apple SD Gothic Neo Bold" size="40.0" />
             </font>
