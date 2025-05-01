@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
@@ -32,8 +36,16 @@
             <Label layoutX="70.0" layoutY="375.0" text="Date/Time">
                <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
             </Label>
-
-            <Circle fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="85.0" stroke="BLACK" />
+      
+                  <Circle fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="85.0" stroke="BLACK" />
+            <SplitMenuButton layoutX="117.0" layoutY="43.0" mnemonicParsing="false" text="SplitMenuButton">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </SplitMenuButton>
+            <ToggleButton layoutX="48.0" layoutY="80.0" mnemonicParsing="false" text="ToggleButton" />
+            <ComboBox layoutX="141.0" layoutY="298.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
    </children>

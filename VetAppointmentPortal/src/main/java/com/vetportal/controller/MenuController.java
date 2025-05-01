@@ -15,31 +15,31 @@ public class MenuController {
         CommonUtil commonObjs = CommonUtil.getInstance();
         commonObjs.setMainBox(mainBox);
 
-        FXUtil.setPage(mainBox, "/fxml/Home.fxml");
+        FXUtil.setPage("/fxml/Home.fxml");
     }
 
     @FXML
     public void showHome() {
-        FXUtil.setPage(mainBox,"/fxml/Home.fxml");
+        FXUtil.setPage("/fxml/Home.fxml");
     }
 
     @FXML
     public void showAddAppointment() {
-        FXUtil.setPage(mainBox,"/fxml/AddAppointment.fxml");
+        FXUtil.setPage("/fxml/AddAppointment.fxml");
     }
 
     @FXML
     public void showEditAppointment() {
-        FXUtil.setPage(mainBox,"/fxml/EditAppointment.fxml");
+        FXUtil.setPage("/fxml/EditAppointment.fxml");
     }
 
     @FXML
     public void showDeleteAppointment() {
-        FXUtil.setPage(mainBox,"/fxml/DeleteAppointment.fxml");
+        FXUtil.setPage("/fxml/DeleteAppointment.fxml");
     }
 
     @FXML
     public void showProfile() {
-        FXUtil.setPage(mainBox,"/fxml/Profile.fxml");
+        FXUtil.setPage("/fxml/Profile.fxml");
     }
 }

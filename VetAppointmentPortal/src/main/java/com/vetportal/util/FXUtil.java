@@ -2,18 +2,47 @@ package com.vetportal.util;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import java.io.IOException;
+import java.net.URL;
+import com.vetportal.util.CommonUtil;
 
-
+//util class for dynamically displaying views
 public class FXUtil {
-    public static void setPage(Pane container, String fxmlPath){
+    static CommonUtil common = CommonUtil.getInstance(); //singleton
+
+    //set page based on path (just UI)
+    public static void setPage(String path) {
+        URL url = FXUtil.class.getResource(path);
         try {
-            FXMLLoader loader = new FXMLLoader(FXUtil.class.getResource(fxmlPath));
-            Parent page = loader.load();
-            container.getChildren().setAll(page);
+            HBox mainBox = common.getMainBox();
+
+            if (mainBox.getChildren().size() > 1) //remove existing page
+                mainBox.getChildren().remove(1);
+
+            Parent panel = FXMLLoader.load(url);
+            mainBox.getChildren().add(panel);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+    }
+
+    //set page and db data based on path
+    public static <T> T setCustomPage(String path) {
+        URL url = FXUtil.class.getResource(path);
+        try {
+            HBox mainBox = common.getMainBox();
+            if (mainBox.getChildren().size() > 1)
+                mainBox.getChildren().remove(1);
+
+            // return the loader to pass account later
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent panel = loader.load();
+            mainBox.getChildren().add(panel);
+            return loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
