@@ -5,6 +5,7 @@ import com.vetportal.model.Customer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,18 +33,20 @@ public class PetMapper implements EntityMapper<Pet> {
                 rs.getInt("customer_id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
-                rs.getString("email"),
+                rs.getString("address"),
                 rs.getString("phone"),
-                rs.getString("address")
+                rs.getString("email")
         );
+
 
         return new Pet(
                 rs.getInt("pet_id"),
                 rs.getString("pet_name"),
                 rs.getString("species"),
                 rs.getString("breed"),
-                rs.getString("birth_date"),
+                LocalDate.parse(rs.getString("birth_date")),
                 owner
         );
     }
+
 }

@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Singleton service manager responsible for initializing and managing application-wide services.
  * <p>
  * This class creates and shares a single database connection and makes service-layer objects
- * (like {@link CustomerService}) accessible throughout the application.
+ * (like {@link CustomerService} and {@link EmployeeService}) accessible throughout the application.
  * <p>
  * The connection is automatically closed when {@link #close()} is called.
  */
@@ -19,6 +19,8 @@ public class ServiceManager {
 
     private final Connection connection;
     private final CustomerService customerService;
+    private final AppointmentService appointmentService;
+    private final EmployeeService employeeService;
 
     /**
      * Initializes the ServiceManager by creating a database connection and instantiating services.
@@ -28,6 +30,8 @@ public class ServiceManager {
     public ServiceManager() throws SQLException {
         this.connection = DbManager.getConnection();
         this.customerService = new CustomerService(connection);
+        this.appointmentService = new AppointmentService(connection);
+        this.employeeService = new EmployeeService(connection);
         instance = this;
     }
 
@@ -56,6 +60,24 @@ public class ServiceManager {
      */
     public CustomerService getCustomerService() {
         return customerService;
+    }
+
+    /**
+     * Returns the shared {@link EmployeeService} instance.
+     *
+     * @return the employee service object
+     */
+    public EmployeeService getEmployeeService() {
+        return employeeService;
+    }
+
+    /**
+     * Returns the shared {@link AppointmentService} instance.
+     *
+     * @return the appointment service object
+     */
+    public AppointmentService getAppointmentService() {
+        return appointmentService;
     }
 
     /**
