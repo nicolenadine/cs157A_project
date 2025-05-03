@@ -30,7 +30,7 @@ public class MenuController {
 
     @FXML
     public void showCustomerSearch() {
-        FXUtil.setPage("/fxml/CustomerSearch.fxml");
+        FXUtil.setPage("/fxml/Customer.fxml");
     }
 
     @FXML

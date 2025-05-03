@@ -18,10 +18,10 @@
             <Button layoutX="55" layoutY="475" onAction="#showAddAppointment" prefHeight="40.0" prefWidth="180.0" text="Create Appointment">
                <font><Font name="Apple SD Gothic Neo Regular" size="15.0" /></font>
             </Button>
-            <Button layoutX="55" layoutY="575.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="180.0" text="Search Customer">
+            <Button layoutX="55.0" layoutY="555.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="180.0" text="Search Customer">
                <font><Font size="15.0" /></font>
             </Button>
-            <Button layoutX="55" layoutY="675" onAction="#showAppointmentSearch" prefHeight="40.0" prefWidth="180.0" text="Search Appointment">
+            <Button layoutX="55.0" layoutY="635.0" onAction="#showAppointmentSearch" prefHeight="40.0" prefWidth="180.0" text="Search Appointment">
                <font><Font size="15.0" /></font>
             </Button>
 
@@ -35,6 +35,11 @@
       
                   <Circle fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="85.0" stroke="BLACK" />
             <Button layoutX="88.0" layoutY="128.0" mnemonicParsing="false" onAction="#showProfile" opacity="0.0" prefHeight="123.0" prefWidth="117.0" text="Button" />
+            <Button layoutX="55.0" layoutY="715.0" onAction="#showAppointmentSearch" prefHeight="40.0" prefWidth="180.0" text="Search Employee">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

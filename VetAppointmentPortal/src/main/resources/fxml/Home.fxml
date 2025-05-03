@@ -11,8 +11,11 @@
     <children>
         <TableView layoutX="115.0" layoutY="113.0" prefHeight="290.0" prefWidth="699.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="Appointment_ID" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="Date" prefWidth="150.0" text="Date" />
+                <TableColumn fx:id="Time" prefWidth="150.0" text="Time" />
+                <TableColumn fx:id="Provider" prefWidth="150.0" text="Provider" />
+                <TableColumn fx:id="pet" prefWidth="172.00004882812505" text="Pet" />
             </columns>
         </TableView>
 
@@ -30,8 +33,11 @@
 
         <TableView layoutX="115.0" layoutY="458.0" prefHeight="290.0" prefWidth="699.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="Available_ID" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="Available_Date" prefWidth="150.0" text="Date" />
+                <TableColumn fx:id="Available_Time" prefWidth="150.0" text="Time" />
+                <TableColumn fx:id="Available_Provider" prefWidth="150.0" text="Provider" />
+                <TableColumn fx:id="Available_Pet" prefWidth="172.00004882812505" text="Pet" />
             </columns>
         </TableView>
 

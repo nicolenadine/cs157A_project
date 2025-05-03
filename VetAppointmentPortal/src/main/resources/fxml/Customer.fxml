@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.CustomerController">
+    <children>
+        <TextField fx:id="customerLookupField" layoutX="348.0" layoutY="350.0" prefHeight="26.0" prefWidth="202.0" promptText="XXX-XXXX" />
+        <Button fx:id="searchButton" layoutX="397.0" layoutY="410.0" onAction="#handleCustomerByPhone" prefHeight="26.0" prefWidth="103.0" text="Search" />
+        <Label fx:id="customerInfoLabel" layoutX="100.0" layoutY="150.0" />
+        <Label layoutX="205.0" layoutY="19.0" text="Customer Information">
+            <font>
+                <Font name="Apple SD Gothic Neo ExtraBold" size="50.0" />
+            </font>
+        </Label>
+        <Circle fx:id="customerPhoto" fill="DODGERBLUE" layoutX="160.0" layoutY="240.0" radius="125.0" stroke="BLACK" strokeType="INSIDE" />
+        <Label fx:id="nameLabel" layoutX="330.0" layoutY="143.0" text="Name:">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="36.0" />
+            </font>
+        </Label>
+        <Label fx:id="emailLabel" layoutX="330.0" layoutY="213.0" text="Email:">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="36.0" />
+            </font>
+        </Label>
+        <Label fx:id="phoneLabel" layoutX="330.0" layoutY="283.0" text="Phone #:">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="36.0" />
+            </font>
+        </Label>
+        <TableView fx:id="petsTableView" layoutX="30.0" layoutY="465.0" prefHeight="300.0" prefWidth="380.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Pet Name" />
+                <TableColumn prefWidth="75.0" text="Species" />
+                <TableColumn prefWidth="75.0" text="Breed" />
+                <TableColumn prefWidth="75.0" text="Age" />
+            </columns>
+        </TableView>
+        <TableView fx:id="appointmentsTableView" layoutX="495.0" layoutY="465.0" prefHeight="300.0" prefWidth="380.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Date" />
+                <TableColumn prefWidth="75.0" text="Time" />
+                <TableColumn prefWidth="75.0" text="Pet" />
+                <TableColumn prefWidth="75.0" text="Reason" />
+            </columns>
+        </TableView>
+        <Label fx:id="petsLabel" layoutX="35.0" layoutY="410.0" text="Pets">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="40.0" />
+            </font>
+        </Label>
+        <Label fx:id="appointmentsLabel" layoutX="500.0" layoutY="410.0" text="Appointments">
+            <font>
+                <Font name="Apple SD Gothic Neo Bold" size="40.0" />
+            </font>
+        </Label>
+        <Button fx:id="addPetButton" layoutX="370.0" layoutY="415.0" mnemonicParsing="false" text="+">
+            <font>
+                <Font name="Apple SD Gothic Neo Regular" size="20.0" />
+            </font>
+        </Button>
+        <Button fx:id="addAppointmentButton" layoutX="835.0" layoutY="415.0" mnemonicParsing="false" text="+">
+            <font>
+                <Font name="Apple SD Gothic Neo Regular" size="20.0" />
+            </font>
+        </Button>
+      <Label fx:id="enterPrompt" layoutX="208.0" layoutY="250.0" text="Enter Customer Phone Number">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
