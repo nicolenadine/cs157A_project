@@ -1,14 +1,16 @@
 package com.vetportal.model;
 
+import java.time.LocalDate;
+
 public class Pet {
     private Integer id;
     private String name;
     private String species;
     private String breed;
-    private String birthDate;
+    private LocalDate birthDate; // format 'YYYY-MM-DD'
     private Customer owner;
 
-    public Pet(Integer id, String name, String species, String breed, String birthDate, Customer owner) {
+    public Pet(Integer id, String name, String species, String breed, LocalDate birthDate, Customer owner) {
         this.id = id;
         this.name = name;
         this.species = species;
@@ -17,11 +19,11 @@ public class Pet {
         this.owner = owner;
     }
 
-    public int getID() {
+    public Integer getID() {
         return id;
     }
 
-    public void setID(int id) {
+    public void setID(Integer id) {
         this.id = id;
     }
 
@@ -49,11 +51,11 @@ public class Pet {
         this.breed = breed;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

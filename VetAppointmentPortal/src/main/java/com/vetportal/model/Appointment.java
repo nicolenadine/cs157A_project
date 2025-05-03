@@ -1,15 +1,18 @@
 package com.vetportal.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Appointment {
     private Integer id;
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private Employee provider;
     private AppointmentType appointmentType;
     private Pet pet;
     private Customer customer;
 
-    public Appointment(Integer id, String date, String time, Employee provider, AppointmentType appointmentType, Pet pet, Customer customer) {
+    public Appointment(Integer id, LocalDate date, LocalTime time, Employee provider, AppointmentType appointmentType, Pet pet, Customer customer) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -27,19 +30,19 @@ public class Appointment {
         this.id = id;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 

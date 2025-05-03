@@ -12,11 +12,12 @@ public class EmployeeMapper implements EntityMapper<Employee> {
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", "employee_id");
-        map.put("firstName", "first_name");
-        map.put("lastName", "last_name");
+        map.put("firstname", "first_name");
+        map.put("lastname", "last_name");
         map.put("address", "address");
         map.put("phone", "phone");
         map.put("email", "email");
+        map.put("role", "role");
         return map;
     }
 
@@ -34,7 +35,7 @@ public class EmployeeMapper implements EntityMapper<Employee> {
                 rs.getString("address"),
                 rs.getString("phone"),
                 rs.getString("email"),
-                Employee.Position.valueOf(rs.getString("position"))
+                Employee.Position.valueOf(rs.getString("role"))  // Convert DB string to Position enum
         );
     }
 }
