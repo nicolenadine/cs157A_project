@@ -1,0 +1,10 @@
+module:VetAppointmentPortal
+com.vetportal
+com.vetportal.controller
+com.vetportal.dao
+com.vetportal.dto
+com.vetportal.exception
+com.vetportal.mapper
+com.vetportal.model
+com.vetportal.service
+com.vetportal.util
