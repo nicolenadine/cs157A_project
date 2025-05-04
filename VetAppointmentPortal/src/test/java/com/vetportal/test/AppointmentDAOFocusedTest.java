@@ -1,9 +1,9 @@
 package com.vetportal.test;
 
-import com.vetportal.dao.impl.AppointmentDAO;
-import com.vetportal.dao.impl.EmployeeDAO;
-import com.vetportal.dao.impl.PetDAO;
-import com.vetportal.dao.impl.CustomerDAO;
+import com.vetportal.dao.AppointmentDAO;
+import com.vetportal.dao.EmployeeDAO;
+import com.vetportal.dao.PetDAO;
+import com.vetportal.dao.CustomerDAO;
 import com.vetportal.model.Appointment;
 import com.vetportal.model.AppointmentType;
 import com.vetportal.model.Customer;
