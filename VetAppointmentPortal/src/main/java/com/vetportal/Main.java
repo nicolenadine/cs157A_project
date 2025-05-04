@@ -3,12 +3,10 @@ package com.vetportal;
 import com.vetportal.service.ServiceManager;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import java.net.URL;
 
 public class Main extends Application {
 
@@ -16,18 +14,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Initialize ServiceManager
+        serviceManager = new ServiceManager();
 
-        serviceManager = new ServiceManager(); //singleton
-
-        URL fxmlUrl = getClass().getResource("/fxml/main.fxml");
-        if (fxmlUrl == null) {
-            throw new IllegalStateException("FXML file not found: /fxml/main.fxml");
-        }
-
-        Parent root = FXMLLoader.load(fxmlUrl);
+        // Create a simple UI without FXML
+        Label label = new Label("Welcome to the Vet Appointment Portal!");
+        StackPane root = new StackPane(label);
 
         primaryStage.setTitle("Vet Appointment Portal");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }
 

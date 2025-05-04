@@ -1,18 +1,24 @@
 /*
- * Javadoc style sheet
+ * VetPortal JavaDoc stylesheet
+ * Using color scheme:
+ * - Light cream: #F5EEDC
+ * - Navy blue: #27548A
+ * - Dark blue: #183B4E
+ * - Gold/orange: #DDA853
  */
 
-@import url('fonts/dejavu.css');
+/* Import Google Fonts - adjusted for better rendering of bold text */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
 
 /*
  * These CSS custom properties (variables) define the core color and font
  * properties used in this stylesheet.
  */
 :root {
-    /* body, block and code fonts */
-    --body-font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
-    --block-font-family: 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
-    --code-font-family: 'DejaVu Sans Mono', monospace;
+    /* body, block and code fonts - updated for better rendering */
+    --body-font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    --block-font-family: 'Open Sans', Georgia, "Times New Roman", Times, serif;
+    --code-font-family: 'Source Code Pro', monospace;
     /* Base font sizes for body and code elements */
     --body-font-size: 14px;
     --code-font-size: 14px;
@@ -21,41 +27,41 @@
     --block-text-color: #474747;
     /* Background colors for various structural elements */
     --body-background-color: #ffffff;
-    --section-background-color: #f8f8f8;
+    --section-background-color: #F5EEDC; /* Light cream */
     --detail-background-color: #ffffff;
     /* Colors for navigation bar and table captions */
-    --navbar-background-color: #4D7A97;
+    --navbar-background-color: #27548A; /* Navy blue */
     --navbar-text-color: #ffffff;
     /* Background color for subnavigation and various headers */
-    --subnav-background-color: #dee3e9;
+    --subnav-background-color: #F5EEDC; /* Light cream */
     /* Background and text colors for selected tabs and navigation items */
-    --selected-background-color: #f8981d;
-    --selected-text-color: #253441;
-    --selected-link-color: #1f389c;
+    --selected-background-color: #DDA853; /* Gold/orange */
+    --selected-text-color: #183B4E; /* Dark blue */
+    --selected-link-color: #183B4E; /* Dark blue */
     /* Background colors for generated tables */
     --even-row-color: #ffffff;
-    --odd-row-color: #eeeeef;
+    --odd-row-color: #F5EEDC; /* Light cream */
     /* Text color for page title */
-    --title-color: #2c4557;
+    --title-color: #183B4E; /* Dark blue */
     /* Text colors for links */
-    --link-color: #4A6782;
-    --link-color-active: #bb7a2a;
+    --link-color: #27548A; /* Navy blue */
+    --link-color-active: #DDA853; /* Gold/orange */
     /* Snippet colors */
-    --snippet-background-color: #ebecee;
+    --snippet-background-color: #EFE4CD; /* Darker cream for better contrast */
     --snippet-text-color: var(--block-text-color);
-    --snippet-highlight-color: #f7c590;
+    --snippet-highlight-color: #DDA853; /* Gold/orange */
     /* Border colors for structural elements and user defined tables */
-    --border-color: #ededed;
-    --table-border-color: #000000;
+    --border-color: #DDA853; /* Gold/orange */
+    --table-border-color: #DDDDDD;
     /* Search input colors */
     --search-input-background-color: #ffffff;
     --search-input-text-color: #000000;
     --search-input-placeholder-color: #909090;
     /* Highlight color for active search tag target */
-    --search-tag-highlight-color: #ffff00;
+    --search-tag-highlight-color: #DDA853; /* Gold/orange */
     /* Adjustments for icon and active background colors of copy-to-clipboard buttons */
     --copy-icon-brightness: 100%;
-    --copy-button-background-color-active: rgba(168, 168, 176, 0.3);
+    --copy-button-background-color-active: rgba(221, 168, 83, 0.3); /* Gold/orange with opacity */
     /* Colors for invalid tag notifications */
     --invalid-tag-background-color: #ffe6e6;
     --invalid-tag-text-color: #000000;
@@ -101,21 +107,27 @@ pre {
 }
 h1 {
     font-size:1.428em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 h2 {
     font-size:1.285em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 h3 {
     font-size:1.14em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 h4 {
     font-size:1.072em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 h5 {
     font-size:1.001em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 h6 {
     font-size:0.93em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 /* Disable font boosting for selected elements */
 h1, h2, h3, h4, h5, h6, div.member-signature {
@@ -192,6 +204,7 @@ button {
     padding:10px 0 0 0;
     overflow:hidden;
     font-size:0.857em;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 button#navbar-toggle-button {
     display:none;
@@ -205,12 +218,15 @@ ul.sub-nav-list-small {
     width:100%;
     overflow:hidden;
     font-size:0.857em;
+    border-bottom:1px solid var(--border-color);
 }
 .sub-nav div {
     clear:left;
     float:left;
     padding:6px;
     text-transform:uppercase;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    font-weight: bold;
 }
 .sub-nav .sub-nav-list {
     padding-top:4px;
@@ -249,7 +265,7 @@ ul.sub-nav-list li {
     text-transform:uppercase;
 }
 .top-nav a:hover {
-    color:var(--link-color-active);
+    color:var(--selected-background-color);
 }
 .nav-bar-cell1-rev {
     background-color:var(--selected-background-color);
@@ -276,6 +292,7 @@ ul.sub-nav-list li {
 .title {
     color:var(--title-color);
     margin:10px 0;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 .sub-title {
     margin:5px 0 0 0;
@@ -536,7 +553,8 @@ div.checkboxes > label > input {
     padding-bottom:3px;
 }
 .table-header {
-    background:var(--subnav-background-color);
+    background:var(--navbar-background-color);
+    color:var(--navbar-text-color);
     font-weight: bold;
 }
 /* Sortable table columns */
@@ -898,7 +916,7 @@ main a[href*="://"]::after {
     background-image:url('data:image/svg+xml; utf8, \
       <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768">\
         <path d="M584 664H104V184h216V80H0v688h688V448H584zM384 0l132 \
-        132-240 240 120 120 240-240 132 132V0z" fill="%234a6782"/>\
+        132-240 240 120 120 240-240 132 132V0z" fill="%2327548A"/>\
       </svg>');
     background-size:100% 100%;
     width:7px;
@@ -911,7 +929,7 @@ main a[href*="://"]:focus::after {
     background-image:url('data:image/svg+xml; utf8, \
       <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768">\
         <path d="M584 664H104V184h216V80H0v688h688V448H584zM384 0l132 \
-        132-240 240 120 120 240-240 132 132V0z" fill="%23bb7a2a"/>\
+        132-240 240 120 120 240-240 132 132V0z" fill="%23DDA853"/>\
       </svg>');
 }
 /*
@@ -1272,4 +1290,13 @@ pre.snippet .bold {
 pre.snippet .highlighted {
     background-color: var(--snippet-highlight-color);
     border-radius: 10%;
+}
+
+/* Method signature special styling for VetPortal */
+.member-signature {
+    background-color: var(--snippet-background-color);
+    border-left: 3px solid var(--selected-background-color);
+    padding-left: 10px;
+    margin: 10px 0;
+    border-radius: 0 3px 3px 0;
 }

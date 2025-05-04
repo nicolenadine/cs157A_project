@@ -1,19 +1,25 @@
 package com.vetportal.mapper;
 
 import com.vetportal.model.*;
-import com.vetportal.dao.impl.PetDAO;
-import com.vetportal.dao.impl.EmployeeDAO;
+import com.vetportal.dao.PetDAO;
+import com.vetportal.dao.EmployeeDAO;
 import com.vetportal.model.AppointmentType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AppointmentMapper implements EntityMapper<Appointment> {
-    private PetDAO petDAO;
-    private EmployeeDAO employeeDAO;
+    private final PetDAO petDAO;
+    private final EmployeeDAO employeeDAO;
 
+    public AppointmentMapper(EmployeeDAO employeeDAO, PetDAO petDAO) {
+        this.employeeDAO = employeeDAO;
+        this.petDAO = petDAO;
+    }
     @Override
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
@@ -46,8 +52,8 @@ public class AppointmentMapper implements EntityMapper<Appointment> {
 
         return new Appointment(
                 rs.getInt("appointment_id"),
-                rs.getDate("date").toLocalDate().toString(),
-                rs.getTime("time").toLocalTime().toString(),
+                LocalDate.parse(rs.getString("date")),
+                LocalTime.parse(rs.getString("time")),
                 provider,
                 AppointmentType.valueOf(rs.getString("appointment_type")),
                 pet,

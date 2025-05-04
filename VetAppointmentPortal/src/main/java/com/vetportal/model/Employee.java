@@ -12,11 +12,11 @@ public class Employee {
     private String firstname;
     private String lastname;
     private String address;
-    private String email;
     private String phone;
+    private String email;
     private Position role;
 
-    public Employee(Integer id, String firstname, String lastname, String address, String email, String phone, Position role) {
+    public Employee(Integer id, String firstname, String lastname, String address, String phone, String email, Position role) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;

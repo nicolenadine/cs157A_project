@@ -5,6 +5,9 @@ package com.vetportal.dto;
  * Includes the returned data (if any), a message (typically for errors),
  * and a status indicating the result of the operation.
  *
+ * Factory methods to simplify the creation of defined and standardized
+ * LookupStatus response types (e.g., SUCCESS, NOT_FOUND, CONFLICT, DB_ERROR).
+ *
  * @param <T> the type of data being returned
  */
 public class ServiceResponse<T> {
@@ -25,7 +28,7 @@ public class ServiceResponse<T> {
         this.status = status;
     }
 
-    // --------  FACTORY METHODS -------
+    // --------  STATIC FACTORY METHODS -------
 
     /**
      * Creates a successful response with the given data.
