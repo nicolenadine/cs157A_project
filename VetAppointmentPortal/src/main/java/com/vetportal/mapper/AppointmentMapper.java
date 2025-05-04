@@ -1,8 +1,8 @@
 package com.vetportal.mapper;
 
 import com.vetportal.model.*;
-import com.vetportal.dao.impl.PetDAO;
-import com.vetportal.dao.impl.EmployeeDAO;
+import com.vetportal.dao.PetDAO;
+import com.vetportal.dao.EmployeeDAO;
 import com.vetportal.model.AppointmentType;
 
 import java.sql.ResultSet;

@@ -1,7 +1,6 @@
 package com.vetportal.service;
 
-import com.vetportal.dao.impl.EmployeeDAO;
-import com.vetportal.dto.LookupStatus;
+import com.vetportal.dao.EmployeeDAO;
 import com.vetportal.dto.ServiceResponse;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Employee;

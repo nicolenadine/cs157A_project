@@ -1,6 +1,5 @@
-package com.vetportal.dao.impl;
+package com.vetportal.dao;
 
-import com.vetportal.dao.interfaces.GenericDAO;
 import com.vetportal.mapper.EntityMapper;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.util.DbManager;

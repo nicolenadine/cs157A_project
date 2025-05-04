@@ -1,12 +1,11 @@
 package com.vetportal.service;
 
-import com.vetportal.dao.impl.CustomerDAO;
-import com.vetportal.dao.impl.PetDAO;
+import com.vetportal.dao.CustomerDAO;
+import com.vetportal.dao.PetDAO;
 import com.vetportal.dto.ServiceResponse;
-import com.vetportal.dao.impl.EmployeeDAO;
+import com.vetportal.dao.EmployeeDAO;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
-import com.vetportal.model.Employee;
 import com.vetportal.model.Pet;
 
 import java.util.List;

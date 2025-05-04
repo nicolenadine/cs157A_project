@@ -1,6 +1,6 @@
 package com.vetportal.test;
 
-import com.vetportal.dao.impl.EmployeeDAO;
+import com.vetportal.dao.EmployeeDAO;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Employee;
 import com.vetportal.util.DatabaseInitializer;

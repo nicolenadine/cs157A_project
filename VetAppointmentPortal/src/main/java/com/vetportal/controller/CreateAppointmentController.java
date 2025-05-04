@@ -17,16 +17,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -37,6 +36,9 @@ public class CreateAppointmentController implements Initializable {
     @FXML private TextField customerLastName;
     @FXML private TextField customerEmail;
     @FXML private TextField customerPhone;
+
+    // Pet Selection
+    @FXML private ComboBox<Pet> petSelector;
 
     // Pet Fields
     @FXML private TextField petName;
@@ -51,6 +53,7 @@ public class CreateAppointmentController implements Initializable {
     @FXML private ComboBox<Employee> providerSelector;
     @FXML private Label titleLabel;
     @FXML private Button saveButton;
+    @FXML private Button lookupCustomerButton;
 
     // Services
     private CustomerService customerService;
@@ -59,6 +62,12 @@ public class CreateAppointmentController implements Initializable {
 
     // Database connection
     private Connection dbConnection;
+
+    // State tracking
+    private Customer selectedCustomer;
+    private Pet selectedPet;
+    private boolean isCustomerDataModified = false;
+    private boolean isPetDataModified = false;
 
     /**
      * Set the database connection and initialize services
@@ -73,13 +82,13 @@ public class CreateAppointmentController implements Initializable {
         // After setting connection, load data that requires DB access
         loadProviders();
         System.out.println("Controller ready, providers loaded");
+
+        // Setup customer lookup button
+        setupCustomerLookup();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        providerSelector.setPromptText("Select a provider");
-
         // Setup appointment types
         setupAppointmentTypes();
 
@@ -90,8 +99,308 @@ public class CreateAppointmentController implements Initializable {
         appointmentDate.setValue(LocalDate.now());
         petBirthDate.setValue(LocalDate.now().minusYears(1)); // Default pet age to 1 year
 
+        // Disable pet fields until a customer is selected
+        setCustomerControlsEnabled(false);
+        setPetControlsEnabled(false);
+
+        // Add listeners for form field changes to track modifications
+        setupFieldChangeListeners();
+
+        // Add listener for appointment date changes to refresh available times
+        appointmentDate.valueProperty().addListener((obs, oldVal, newVal) -> updateAvailableTimes());
+
+        // Add listener for provider selection to refresh available times
+        providerSelector.valueProperty().addListener((obs, oldVal, newVal) -> updateAvailableTimes());
+
+        // Add listener for pet selection to populate pet fields
+        petSelector.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                selectedPet = newVal;
+                populatePetFields(selectedPet);
+                setPetControlsEnabled(true);
+            }
+        });
+
         // Add listener to the save button
         saveButton.setOnAction(this::handleSaveButton);
+    }
+
+    /**
+     * Set up the customer lookup functionality
+     */
+    private void setupCustomerLookup() {
+        lookupCustomerButton.setOnAction(event -> showCustomerLookupDialog());
+    }
+
+    /**
+     * Display the customer lookup dialog
+     */
+    private void showCustomerLookupDialog() {
+        // Create a dialog
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Customer Lookup");
+        dialog.setHeaderText("Enter customer phone number");
+
+        // Set the button types
+        ButtonType lookupButtonType = new ButtonType("Lookup", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(lookupButtonType, ButtonType.CANCEL);
+
+        // Create the phone field and add it to the dialog
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Phone number");
+
+        VBox content = new VBox(10);
+        content.getChildren().addAll(new Label("Phone:"), phoneField);
+        dialog.getDialogPane().setContent(content);
+
+        // Request focus on the phone field by default
+        phoneField.requestFocus();
+
+        // Convert the result to a phone number when the lookup button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == lookupButtonType) {
+                return phoneField.getText();
+            }
+            return null;
+        });
+
+        // Show the dialog and process the result
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.showAndWait().ifPresent(phoneNumber -> {
+            if (phoneNumber != null && !phoneNumber.isEmpty()) {
+                lookupCustomerByPhone(phoneNumber);
+            }
+        });
+    }
+
+    /**
+     * Look up a customer by phone number
+     * @param phone the phone number to search for
+     */
+    private void lookupCustomerByPhone(String phone) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("phone", phone);
+
+        ServiceResponse<Customer> response = customerService.findCustomerByAttributes(attributes);
+
+        if (response.getStatus() == LookupStatus.SUCCESS && response.getData() != null) {
+            // Customer found, populate fields
+            selectedCustomer = response.getData();
+            populateCustomerFields(selectedCustomer);
+            loadCustomerPets(selectedCustomer);
+            setCustomerControlsEnabled(true);
+
+            // Reset modification tracking
+            isCustomerDataModified = false;
+
+            // Display success message
+            showAlert(AlertType.INFORMATION, "Customer Found",
+                    "Customer information loaded",
+                    "Customer " + selectedCustomer.getFirstName() + " " + selectedCustomer.getLastName() + " has been found.");
+        } else {
+            // Customer not found, allow creating a new one
+            showAlert(AlertType.INFORMATION, "Customer Not Found",
+                    "No customer found with that phone number",
+                    "Please enter the customer information to create a new customer.");
+
+            // Clear fields and enable them for a new customer
+            clearCustomerFields();
+            clearPetFields();
+            setCustomerControlsEnabled(true);
+            setPetControlsEnabled(true);
+            petSelector.setItems(FXCollections.observableArrayList());
+            selectedCustomer = null;
+            selectedPet = null;
+        }
+    }
+
+    /**
+     * Load all pets for the selected customer
+     * @param customer the customer to load pets for
+     */
+    private void loadCustomerPets(Customer customer) {
+        if (customer == null || customer.getID() == null) {
+            petSelector.setItems(FXCollections.observableArrayList());
+            return;
+        }
+
+        ServiceResponse<List<Pet>> response = customerService.findPetsByCustomerId(customer.getID());
+
+        if (response.getStatus() == LookupStatus.SUCCESS && response.getData() != null) {
+            ObservableList<Pet> pets = FXCollections.observableArrayList(response.getData());
+            petSelector.setItems(pets);
+
+            // Set up cell factory to display pet names
+            petSelector.setCellFactory(param -> new ListCell<Pet>() {
+                @Override
+                protected void updateItem(Pet pet, boolean empty) {
+                    super.updateItem(pet, empty);
+                    if (empty || pet == null) {
+                        setText(null);
+                    } else {
+                        setText(pet.getName() + " (" + pet.getSpecies() + ")");
+                    }
+                }
+            });
+
+            // Set converter for displaying selected value
+            petSelector.setConverter(new javafx.util.StringConverter<Pet>() {
+                @Override
+                public String toString(Pet pet) {
+                    if (pet == null) {
+                        return null;
+                    }
+                    return pet.getName() + " (" + pet.getSpecies() + ")";
+                }
+
+                @Override
+                public Pet fromString(String string) {
+                    return null;
+                }
+            });
+
+            // If pets exist, select the first one
+            if (!pets.isEmpty()) {
+                petSelector.getSelectionModel().selectFirst();
+                selectedPet = pets.get(0);
+                populatePetFields(selectedPet);
+                setPetControlsEnabled(true);
+                isPetDataModified = false;
+            } else {
+                clearPetFields();
+                setPetControlsEnabled(true);
+                selectedPet = null;
+            }
+        } else {
+            petSelector.setItems(FXCollections.observableArrayList());
+            clearPetFields();
+            setPetControlsEnabled(true);
+            selectedPet = null;
+        }
+    }
+
+    /**
+     * Populate customer fields with data from a Customer object
+     * @param customer the customer data to display
+     */
+    private void populateCustomerFields(Customer customer) {
+        if (customer == null) return;
+
+        customerFirstName.setText(customer.getFirstName());
+        customerLastName.setText(customer.getLastName());
+        customerEmail.setText(customer.getEmail());
+        customerPhone.setText(customer.getPhone());
+    }
+
+    /**
+     * Populate pet fields with data from a Pet object
+     * @param pet the pet data to display
+     */
+    private void populatePetFields(Pet pet) {
+        if (pet == null) return;
+
+        petName.setText(pet.getName());
+        petSpecies.setText(pet.getSpecies());
+        petBreed.setText(pet.getBreed());
+        petBirthDate.setValue(pet.getBirthDate());
+    }
+
+    /**
+     * Clear all customer fields
+     */
+    private void clearCustomerFields() {
+        customerFirstName.clear();
+        customerLastName.clear();
+        customerEmail.clear();
+        customerPhone.clear();
+    }
+
+    /**
+     * Clear all pet fields
+     */
+    private void clearPetFields() {
+        petName.clear();
+        petSpecies.clear();
+        petBreed.clear();
+        petBirthDate.setValue(LocalDate.now().minusYears(1));
+    }
+
+    /**
+     * Enable or disable customer-related controls
+     * @param enabled true to enable controls, false to disable
+     */
+    private void setCustomerControlsEnabled(boolean enabled) {
+        customerFirstName.setEditable(enabled);
+        customerLastName.setEditable(enabled);
+        customerEmail.setEditable(enabled);
+        customerPhone.setEditable(enabled);
+        petSelector.setDisable(!enabled);
+    }
+
+    /**
+     * Enable or disable pet-related controls
+     * @param enabled true to enable controls, false to disable
+     */
+    private void setPetControlsEnabled(boolean enabled) {
+        petName.setEditable(enabled);
+        petSpecies.setEditable(enabled);
+        petBreed.setEditable(enabled);
+        petBirthDate.setDisable(!enabled);
+    }
+
+    /**
+     * Setup change listeners for all form fields to track modifications
+     */
+    private void setupFieldChangeListeners() {
+        // Customer field listeners
+        customerFirstName.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedCustomer != null && !newVal.equals(selectedCustomer.getFirstName())) {
+                isCustomerDataModified = true;
+            }
+        });
+
+        customerLastName.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedCustomer != null && !newVal.equals(selectedCustomer.getLastName())) {
+                isCustomerDataModified = true;
+            }
+        });
+
+        customerEmail.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedCustomer != null && !newVal.equals(selectedCustomer.getEmail())) {
+                isCustomerDataModified = true;
+            }
+        });
+
+        customerPhone.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedCustomer != null && !newVal.equals(selectedCustomer.getPhone())) {
+                isCustomerDataModified = true;
+            }
+        });
+
+        // Pet field listeners
+        petName.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedPet != null && !newVal.equals(selectedPet.getName())) {
+                isPetDataModified = true;
+            }
+        });
+
+        petSpecies.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedPet != null && !newVal.equals(selectedPet.getSpecies())) {
+                isPetDataModified = true;
+            }
+        });
+
+        petBreed.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedPet != null && !newVal.equals(selectedPet.getBreed())) {
+                isPetDataModified = true;
+            }
+        });
+
+        petBirthDate.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (selectedPet != null && !newVal.equals(selectedPet.getBirthDate())) {
+                isPetDataModified = true;
+            }
+        });
     }
 
     /**
@@ -104,8 +413,6 @@ public class CreateAppointmentController implements Initializable {
         }
 
         try {
-            // We might need to adjust this if Employee.Position doesn't have VETERINARIAN
-            // Consider using a map lookup instead if needed
             ServiceResponse<List<Employee>> response = employeeService.getAllEmployees();
 
             if (response.getStatus() == LookupStatus.SUCCESS && response.getData() != null) {
@@ -175,7 +482,8 @@ public class CreateAppointmentController implements Initializable {
     }
 
     /**
-     * Setup time slots from 8 AM to 6 PM in 30-minute intervals
+     * Setup initial time slots from 8 AM to 6 PM in 30-minute intervals
+     * These will be filtered based on availability later
      */
     private void setupTimeSlots() {
         List<String> timeSlots = IntStream.rangeClosed(8, 17)
@@ -192,25 +500,75 @@ public class CreateAppointmentController implements Initializable {
     }
 
     /**
+     * Update available appointment times based on selected date and provider
+     */
+    private void updateAvailableTimes() {
+        LocalDate date = appointmentDate.getValue();
+        Employee provider = providerSelector.getValue();
+
+        if (date == null || provider == null) {
+            return;
+        }
+
+        // Generate all possible time slots
+        List<String> allTimeSlots = IntStream.rangeClosed(8, 17)
+                .boxed()
+                .flatMap(hour -> List.of(
+                        String.format("%02d:00", hour),
+                        String.format("%02d:30", hour)
+                ).stream())
+                .collect(Collectors.toList());
+
+        // Create a filtered list of available times
+        List<String> availableTimes = new ArrayList<>();
+
+        for (String timeSlot : allTimeSlots) {
+            String[] timeParts = timeSlot.split(":");
+            LocalTime time = LocalTime.of(Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]));
+
+            // Check if the slot is available (not taken)
+            boolean isSlotTaken = appointmentService.isProviderSlotTaken(
+                    provider.getID(),
+                    date,
+                    time,
+                    null // No appointment ID to exclude since we're creating a new one
+            );
+
+            if (!isSlotTaken) {
+                availableTimes.add(timeSlot);
+            }
+        }
+
+        // Update the time combobox with available slots
+        ObservableList<String> times = FXCollections.observableArrayList(availableTimes);
+        appointmentTime.setItems(times);
+
+        // Select the first available time if any exist
+        if (!times.isEmpty()) {
+            appointmentTime.getSelectionModel().selectFirst();
+        }
+    }
+
+    /**
      * Handle the save button click event
      * @param event action event
      */
     private void handleSaveButton(ActionEvent event) {
         if (validateForm()) {
             try {
-                // Create or find customer
-                ServiceResponse<Customer> customerResponse = createOrFindCustomer();
+                // Create or update customer if needed
+                ServiceResponse<Customer> customerResponse = createOrUpdateCustomer();
                 if (customerResponse.getStatus() != LookupStatus.SUCCESS) {
-                    showAlert(AlertType.ERROR, "Customer Error", "Failed to create/find customer",
+                    showAlert(AlertType.ERROR, "Customer Error", "Failed to create/update customer",
                             customerResponse.getMessage());
                     return;
                 }
                 Customer customer = customerResponse.getData();
 
-                // Create or find pet
-                ServiceResponse<Pet> petResponse = createOrFindPet(customer);
+                // Create or update pet if needed
+                ServiceResponse<Pet> petResponse = createOrUpdatePet(customer);
                 if (petResponse.getStatus() != LookupStatus.SUCCESS) {
-                    showAlert(AlertType.ERROR, "Pet Error", "Failed to create/find pet",
+                    showAlert(AlertType.ERROR, "Pet Error", "Failed to create/update pet",
                             petResponse.getMessage());
                     return;
                 }
@@ -270,10 +628,16 @@ public class CreateAppointmentController implements Initializable {
     }
 
     /**
-     * Create or find an existing customer based on email
+     * Create a new customer or update an existing one only if data has been modified
      * @return a ServiceResponse containing the Customer object or error
      */
-    private ServiceResponse<Customer> createOrFindCustomer() {
+    private ServiceResponse<Customer> createOrUpdateCustomer() {
+        // If we have a selected customer and the data hasn't been modified, just return it
+        if (selectedCustomer != null && !isCustomerDataModified) {
+            return ServiceResponse.success(selectedCustomer);
+        }
+
+        // Otherwise, we need to create or update the customer
         Map<String, String> attributes = new HashMap<>();
         attributes.put("email", customerEmail.getText());
 
@@ -287,12 +651,12 @@ public class CreateAppointmentController implements Initializable {
             boolean needsUpdate = false;
 
             if (!customer.getFirstName().equals(customerFirstName.getText())) {
-                customer.setFirstname(customerFirstName.getText());
+                customer.setFirstName(customerFirstName.getText());
                 needsUpdate = true;
             }
 
             if (!customer.getLastName().equals(customerLastName.getText())) {
-                customer.setLastname(customerLastName.getText());
+                customer.setLastName(customerLastName.getText());
                 needsUpdate = true;
             }
 
@@ -325,12 +689,52 @@ public class CreateAppointmentController implements Initializable {
     }
 
     /**
-     * Create or find an existing pet based on name and owner
+     * Create a new pet or update an existing one only if data has been modified
      * @param owner the pet's owner
      * @return a ServiceResponse containing the Pet object or error
      */
-    private ServiceResponse<Pet> createOrFindPet(Customer owner) {
-        // First check if this customer already has a pet with this name
+    private ServiceResponse<Pet> createOrUpdatePet(Customer owner) {
+        // If we have a selected pet and the data hasn't been modified, just return it
+        if (selectedPet != null && !isPetDataModified) {
+            return ServiceResponse.success(selectedPet);
+        }
+
+        // If a pet is selected from the dropdown, check if it needs updating
+        if (selectedPet != null) {
+            // Update pet info if needed
+            boolean needsUpdate = false;
+
+            if (!selectedPet.getName().equals(petName.getText())) {
+                selectedPet.setName(petName.getText());
+                needsUpdate = true;
+            }
+
+            if (!selectedPet.getSpecies().equals(petSpecies.getText())) {
+                selectedPet.setSpecies(petSpecies.getText());
+                needsUpdate = true;
+            }
+
+            if (!selectedPet.getBreed().equals(petBreed.getText())) {
+                selectedPet.setBreed(petBreed.getText());
+                needsUpdate = true;
+            }
+
+            if (!selectedPet.getBirthDate().equals(petBirthDate.getValue())) {
+                selectedPet.setBirthDate(petBirthDate.getValue());
+                needsUpdate = true;
+            }
+
+            if (needsUpdate) {
+                boolean updated = customerService.updatePet(selectedPet);
+                if (!updated) {
+                    return ServiceResponse.dbError("Failed to update pet information");
+                }
+            }
+
+            return ServiceResponse.success(selectedPet);
+        }
+
+        // Otherwise, check if the customer has a pet with this name already
         ServiceResponse<List<Pet>> petsResponse = customerService.findPetsByCustomerId(owner.getID());
 
         if (petsResponse.getStatus() == LookupStatus.SUCCESS) {
@@ -413,7 +817,7 @@ public class CreateAppointmentController implements Initializable {
                 pet.getOwner()
         );
 
-        //check if provider is qualified
+        // Double-check if provider is still available (in case it changed while form was open)
         boolean isSlotTaken = appointmentService.isProviderSlotTaken(
                 provider.getID(),
                 appointmentDate.getValue(),
@@ -431,9 +835,20 @@ public class CreateAppointmentController implements Initializable {
 
     //commit changes
     private void closeForm() {
-        Stage stage = (Stage) saveButton.getScene().getWindow();
-        stage.close();
+        try {
+            // Get only the current stage (appointment form window)
+            Stage stage = (Stage) saveButton.getScene().getWindow();
+
+            // Close only this stage, not the entire application otherwise app closes after appointment creation
+            stage.close();
+
+            System.out.println("Successfully closed appointment form window");
+        } catch (Exception e) {
+            System.err.println("Error closing form: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     //alert
     private void showAlert(AlertType alertType, String title, String header, String content) {

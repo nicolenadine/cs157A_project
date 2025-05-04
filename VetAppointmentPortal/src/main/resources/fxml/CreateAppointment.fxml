@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800" prefWidth="900" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.CreateAppointmentController">
+<AnchorPane prefHeight="840" prefWidth="900" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.CreateAppointmentController">
 
     <VBox layoutY="14.0" spacing="15" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
         <padding>
@@ -33,11 +33,15 @@
         </HBox>
 
         <!-- Customer Information Section -->
-        <Label styleClass="section-header" text="Customer Information">
-            <font>
-                <Font name="System Bold" size="16" />
-            </font>
-        </Label>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label styleClass="section-header" text="Customer Information">
+                <font>
+                    <Font name="System Bold" size="16" />
+                </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="lookupCustomerButton" text="Lookup Customer" />
+        </HBox>
 
         <GridPane alignment="CENTER" hgap="20" vgap="15">
             <columnConstraints>
@@ -68,6 +72,16 @@
             <TextField fx:id="customerPhone" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         </GridPane>
 
+        <!-- Pet Selection Section -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Select Pet:">
+                <font>
+                    <Font name="System Bold" size="14" />
+                </font>
+            </Label>
+            <ComboBox fx:id="petSelector" prefWidth="400" />
+        </HBox>
+
         <!-- Pet Information Section -->
         <Label styleClass="section-header" text="Pet Information">
             <font>
@@ -93,15 +107,15 @@
 
             <!-- Species -->
             <Label text="Species:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="petSpecies" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
             <!-- Breed -->
             <Label text="Breed:" GridPane.rowIndex="2" />
+            <TextField fx:id="petBreed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
             <!-- Age -->
             <Label text="Birth Date:" GridPane.rowIndex="3" />
             <DatePicker fx:id="petBirthDate" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-         <TextField fx:id="petSpecies" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         <TextField fx:id="petBreed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         </GridPane>
 
         <!-- Appointment Information Section -->

@@ -1,4 +1,4 @@
-package com.vetportal.dao.impl;
+package com.vetportal.dao;
 
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.mapper.CustomerMapper;
