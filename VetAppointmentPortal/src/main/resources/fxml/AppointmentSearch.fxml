@@ -4,17 +4,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.HomeController">
-    <children>
-        <Label layoutX="185.0" layoutY="9.0" text="Vet Appointment Portal">
-            <font>
-                <Font name="Apple SD Gothic Neo ExtraBold" size="50.0" />
-            </font>
-        </Label>
-        <Label layoutX="256.0" layoutY="371.0" text="Searching appointment...">
-            <font>
-                <Font name="Apple SD Gothic Neo Bold" size="40.0" />
-            </font>
-        </Label>
-    </children>
+<AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.AppointmentSearchController">
+   <children>
+      <Label layoutX="221.0" layoutY="365.0" text="Under Construction!">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>

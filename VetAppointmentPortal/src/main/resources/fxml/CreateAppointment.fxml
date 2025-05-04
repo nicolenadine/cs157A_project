@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800" prefWidth="900" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.CreateAppointmentController">
+
+    <VBox layoutY="14.0" spacing="15" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+        <padding>
+            <Insets bottom="20" left="30" right="30" top="20" />
+        </padding>
+
+        <!-- Header Section -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label fx:id="titleLabel" text="New Appointment">
+                <font>
+                    <Font name="System Bold" size="24" />
+                </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Customer Information Section -->
+        <Label styleClass="section-header" text="Customer Information">
+            <font>
+                <Font name="System Bold" size="16" />
+            </font>
+        </Label>
+
+        <GridPane alignment="CENTER" hgap="20" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="150" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="500" minWidth="300" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+            <!-- First Name -->
+            <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="customerFirstName" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <!-- Last Name -->
+            <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="customerLastName" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <!-- Email -->
+            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="customerEmail" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <!-- Phone -->
+            <Label text="Phone Number:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="customerPhone" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        </GridPane>
+
+        <!-- Pet Information Section -->
+        <Label styleClass="section-header" text="Pet Information">
+            <font>
+                <Font name="System Bold" size="16" />
+            </font>
+        </Label>
+
+        <GridPane alignment="CENTER" hgap="20" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="150" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="500" minWidth="300" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+            <!-- Pet Name -->
+            <Label text="Pet Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="petName" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <!-- Species -->
+            <Label text="Species:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+            <!-- Breed -->
+            <Label text="Breed:" GridPane.rowIndex="2" />
+
+            <!-- Age -->
+            <Label text="Birth Date:" GridPane.rowIndex="3" />
+            <DatePicker fx:id="petBirthDate" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <TextField fx:id="petSpecies" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <TextField fx:id="petBreed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        </GridPane>
+
+        <!-- Appointment Information Section -->
+        <Label styleClass="section-header" text="Appointment Details">
+            <font>
+                <Font name="System Bold" size="16" />
+            </font>
+        </Label>
+
+        <GridPane alignment="CENTER" hgap="20" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="150" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="500" minWidth="300" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+            <!-- Date -->
+            <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <DatePicker fx:id="appointmentDate" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <!-- Time -->
+            <Label text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <ComboBox fx:id="appointmentTime" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <!-- Type -->
+            <Label text="Appointment Type:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <ComboBox fx:id="appointmentType" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <!-- Provider -->
+            <Label text="Provider:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <ComboBox fx:id="providerSelector" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        </GridPane>
+
+        <!-- Buttons Section -->
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <padding>
+                <Insets top="20" />
+            </padding>
+            <Button fx:id="saveButton" prefHeight="35" prefWidth="150" styleClass="primary-button" text="Create Appointment" />
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -178,11 +178,12 @@ public class PetDAO extends BaseDAO<Pet> {
     public List<Pet> findAllPetsByCustomerId(int customerId) {
         String query = """
         SELECT p.pet_id, p.pet_name, p.species, p.breed,
-        date(p.birth_date) as birth_date, p.owner, c.*
+        date(p.birth_date) as birth_date, p.owner,
+        c.customer_id, c.first_name, c.last_name, c.address, c.phone, c.email
         FROM Pet p
         JOIN Customer c ON p.owner = c.customer_id
         WHERE p.owner = ?
-    """;
+        """;
 
         List<Pet> pets = new ArrayList<>();
 

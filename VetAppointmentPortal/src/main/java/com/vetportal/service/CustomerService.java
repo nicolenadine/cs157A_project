@@ -6,6 +6,7 @@ import com.vetportal.dto.ServiceResponse;
 import com.vetportal.dao.impl.EmployeeDAO;
 import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
+import com.vetportal.model.Employee;
 import com.vetportal.model.Pet;
 
 import java.util.List;
@@ -212,9 +213,7 @@ public class CustomerService {
             }
 
             List<Pet> pets = petDAO.findAllPetsByCustomerId(customerID);
-            if (pets.isEmpty()) {
-                return ServiceResponse.notFound("No pets found for customer ID " + customerID);
-            }
+            // Return success even if the list is empty
             return ServiceResponse.success(pets);
         } catch (Exception e) {
             return ServiceResponse.dbError("Error retrieving pets for customer ID " + customerID + ": " + e.getMessage());

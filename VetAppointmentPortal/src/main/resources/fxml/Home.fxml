@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.HomeController">
+<AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.HomeController">
     <children>
-        <TableView layoutX="115.0" layoutY="113.0" prefHeight="290.0" prefWidth="699.0">
+        <TableView fx:id="todayTable" layoutX="115.0" layoutY="113.0" prefHeight="290.0" prefWidth="699.0">
             <columns>
                 <TableColumn fx:id="Appointment_ID" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="Date" prefWidth="150.0" text="Date" />
@@ -25,29 +25,12 @@
             </font>
         </Label>
 
-        <Label layoutX="95.0" layoutY="78.0" text="Today's Appointments">
+        <Label fx:id="todayLabel" layoutX="95.0" layoutY="78.0" text="Today's Appointments">
             <font>
                 <Font name="Apple SD Gothic Neo Bold" size="20.0" />
             </font>
         </Label>
 
-        <TableView layoutX="115.0" layoutY="458.0" prefHeight="290.0" prefWidth="699.0">
-            <columns>
-                <TableColumn fx:id="Available_ID" prefWidth="75.0" text="ID" />
-                <TableColumn fx:id="Available_Date" prefWidth="150.0" text="Date" />
-                <TableColumn fx:id="Available_Time" prefWidth="150.0" text="Time" />
-                <TableColumn fx:id="Available_Provider" prefWidth="150.0" text="Provider" />
-                <TableColumn fx:id="Available_Pet" prefWidth="172.00004882812505" text="Pet" />
-            </columns>
-        </TableView>
-
-        <Label layoutX="95.0" layoutY="423.0" text="Available Appointments">
-            <font>
-                <Font name="Apple SD Gothic Neo Bold" size="20.0" />
-            </font>
-        </Label>
-
-        <DatePicker layoutX="630.0" layoutY="78.0" promptText="Select Date" />
-        <DatePicker layoutX="630.0" layoutY="423.0" promptText="Select Date" />
+        <DatePicker fx:id="todayDatePicker" layoutX="630.0" layoutY="78.0" promptText="Select Date" />
     </children>
 </AnchorPane>

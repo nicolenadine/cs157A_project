@@ -15,13 +15,13 @@
             <Button layoutX="15" layoutY="15" onAction="#showHome" text="Home">
                <font><Font size="15.0" /></font>
             </Button>
-            <Button layoutX="55" layoutY="475" onAction="#showAddAppointment" prefHeight="40.0" prefWidth="180.0" text="Create Appointment">
+            <Button layoutX="45.0" layoutY="475" onAction="#showCreateAppointment" prefHeight="40.0" prefWidth="200.0" text="Create Appointment">
                <font><Font name="Apple SD Gothic Neo Regular" size="15.0" /></font>
             </Button>
-            <Button layoutX="55.0" layoutY="555.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="180.0" text="Search Customer">
+            <Button layoutX="45.0" layoutY="635.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="200.0" text="Search Customer">
                <font><Font size="15.0" /></font>
             </Button>
-            <Button layoutX="55.0" layoutY="635.0" onAction="#showAppointmentSearch" prefHeight="40.0" prefWidth="180.0" text="Search Appointment">
+            <Button layoutX="45.0" layoutY="555.0" onAction="#showEditAppointment" prefHeight="40.0" prefWidth="200.0" text="Edit/Delete Appointment">
                <font><Font size="15.0" /></font>
             </Button>
 
@@ -29,13 +29,12 @@
                <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
             </Label>
 
-            <Label layoutX="70.0" layoutY="375.0" text="Date/Time">
-               <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
+            <Label fx:id="dateTime" layoutX="17.0" layoutY="382.0" text="EEEE, MMMM d HH:mm">
+               <font><Font size="25.0" /></font>
             </Label>
-      
-                  <Circle fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="85.0" stroke="BLACK" />
-            <Button layoutX="88.0" layoutY="128.0" mnemonicParsing="false" onAction="#showProfile" opacity="0.0" prefHeight="123.0" prefWidth="117.0" text="Button" />
-            <Button layoutX="55.0" layoutY="715.0" onAction="#showAppointmentSearch" prefHeight="40.0" prefWidth="180.0" text="Search Employee">
+
+            <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="115.0" />
+            <Button layoutX="45.0" layoutY="715.0" onAction="#showEmployeeSearch" prefHeight="40.0" prefWidth="200.0" text="Search Employee">
                <font>
                   <Font size="15.0" />
                </font>
