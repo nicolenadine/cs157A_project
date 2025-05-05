@@ -11,9 +11,13 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.EmployeeController">
     <children>
-        <TextField fx:id="employeeLookupField" layoutX="348.0" layoutY="350.0" prefHeight="26.0" prefWidth="202.0" promptText="ID" />
-        <Button fx:id="searchButton" layoutX="397.0" layoutY="410.0" onAction="#handleEmployeeById" prefHeight="26.0" prefWidth="103.0" text="Search" />
-        <Label layoutX="234.0" layoutY="14.0" text="Employee Information">
+        <!-- Centered TextField by setting layout position to (AnchorPane width - TextField width)/2 -->
+        <TextField fx:id="employeeLookupField" alignment="CENTER" layoutX="349.0" layoutY="350.0" prefHeight="26.0" prefWidth="202.0" promptText="ID" AnchorPane.leftAnchor="349.0" AnchorPane.rightAnchor="349.0" />
+
+        <!-- Centered Button by setting layout position to (AnchorPane width - Button width)/2 -->
+        <Button fx:id="searchButton" alignment="CENTER" layoutX="398.5" layoutY="410.0" onAction="#handleEmployeeById" prefHeight="26.0" prefWidth="103.0" text="Search" AnchorPane.leftAnchor="398.5" AnchorPane.rightAnchor="398.5" />
+
+        <Label alignment="CENTER" layoutX="225.0" layoutY="14.0" text="Employee Information" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="225.0">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
@@ -39,7 +43,7 @@
                 <Font size="26.0" />
             </font>
         </Label>
-        <TableView fx:id="appointmentsTableView" layoutX="175.0" layoutY="464.0" prefHeight="300.0" prefWidth="552.0">
+        <TableView fx:id="appointmentsTableView" layoutX="175.0" layoutY="445.0" prefHeight="300.0" prefWidth="552.0">
             <columns>
                 <TableColumn fx:id="dateColumn" prefWidth="111.99999809265137" text="Date" />
                 <TableColumn fx:id="timeColumn" prefWidth="90.39997100830078" text="Time" />
@@ -48,25 +52,28 @@
                 <TableColumn fx:id="providerColumn" prefWidth="163.99990844726562" text="Provider" />
             </columns>
         </TableView>
-        <Label fx:id="appointmentsLabel" layoutX="175.0" layoutY="419.0" text="Appointments">
+        <Label fx:id="appointmentsLabel" layoutX="175.0" layoutY="400.0" text="Appointments">
             <font>
                 <Font name="System Bold" size="28.0" />
             </font>
         </Label>
-        <Label fx:id="enterPrompt" layoutX="218.0" layoutY="245.0" text="Enter Employee ID Number">
+
+        <!-- Centered Label with adjusted layoutX -->
+        <Label fx:id="enterPrompt" alignment="CENTER" layoutX="198.0" layoutY="245.0" text="Enter Employee ID Number" AnchorPane.leftAnchor="198.0" AnchorPane.rightAnchor="198.0">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
         </Label>
-        <Button fx:id="editAppointmentButton" layoutX="652.0" layoutY="424.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="74.0" text="Edit">
+
+        <Button fx:id="editAppointmentButton" layoutX="652.0" layoutY="405.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="74.0" text="Edit">
             <font>
                 <Font size="14.0" />
             </font>
         </Button>
-      <Label fx:id="roleLabel" layoutX="327.0" layoutY="145.0" text="Role:">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
+        <Label fx:id="roleLabel" layoutX="327.0" layoutY="145.0" text="Role:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
     </children>
 </AnchorPane>

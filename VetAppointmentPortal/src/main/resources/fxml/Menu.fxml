@@ -8,36 +8,42 @@
 <?import javafx.scene.text.Font?>
 
 <HBox fx:id="mainBox" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.MenuController">
-
    <children>
       <AnchorPane prefWidth="300.0" style="-fx-background-color: gray;">
          <children>
-            <Button layoutX="15" layoutY="15" onAction="#showHome" text="Home">
-               <font><Font size="15.0" /></font>
-            </Button>
-            <Button layoutX="45.0" layoutY="475" onAction="#showCreateAppointment" prefHeight="40.0" prefWidth="200.0" text="Create Appointment">
-               <font><Font name="Apple SD Gothic Neo Regular" size="15.0" /></font>
-            </Button>
-            <Button layoutX="45.0" layoutY="635.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="200.0" text="Search Customer">
-               <font><Font size="15.0" /></font>
-            </Button>
-            <Button layoutX="45.0" layoutY="555.0" onAction="#showEditAppointment" prefHeight="40.0" prefWidth="200.0" text="Edit/Delete Appointment">
+            <!-- Center the Home button -->
+            <Button layoutX="14.0" layoutY="14.0" onAction="#showHome" prefHeight="31.0" prefWidth="73.0" text="Home" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="214.0">
                <font><Font size="15.0" /></font>
             </Button>
 
-            <Label layoutX="65.0" layoutY="315" text="Hello, User!">
+            <!-- Center the circle -->
+            <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="150.0" layoutY="190.0" radius="115.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="35.0" />
+
+            <!-- Center the Hello User label -->
+            <Label alignment="CENTER" layoutX="0.0" layoutY="315.0" text="Hello, User!" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font><Font name="Apple SD Gothic Neo Bold" size="30.0" /></font>
             </Label>
 
-            <Label fx:id="dateTime" layoutX="17.0" layoutY="382.0" text="EEEE, MMMM d HH:mm">
+            <!-- Center the date time label -->
+            <Label fx:id="dateTime" alignment="CENTER" layoutX="0.0" layoutY="382.0" text="EEEE, MMMM d HH:mm" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font><Font size="25.0" /></font>
             </Label>
 
-            <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="145.0" layoutY="190.0" radius="115.0" />
-            <Button layoutX="45.0" layoutY="715.0" onAction="#showEmployeeSearch" prefHeight="40.0" prefWidth="200.0" text="Search Employee">
-               <font>
-                  <Font size="15.0" />
-               </font>
+            <!-- Center the buttons -->
+            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="475.0" onAction="#showCreateAppointment" prefHeight="40.0" prefWidth="200.0" text="Create Appointment" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+               <font><Font name="Apple SD Gothic Neo Regular" size="15.0" /></font>
+            </Button>
+
+            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="555.0" onAction="#showEditAppointment" prefHeight="40.0" prefWidth="200.0" text="Edit/Delete Appointment" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+               <font><Font size="15.0" /></font>
+            </Button>
+
+            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="635.0" onAction="#showCustomerSearch" prefHeight="40.0" prefWidth="200.0" text="Search Customer" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+               <font><Font size="15.0" /></font>
+            </Button>
+
+            <Button alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="715.0" onAction="#showEmployeeSearch" prefHeight="40.0" prefWidth="200.0" text="Search Employee" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+               <font><Font size="15.0" /></font>
             </Button>
          </children>
       </AnchorPane>
