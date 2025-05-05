@@ -833,7 +833,6 @@ public class CreateAppointmentController implements Initializable {
         return appointmentService.createAppointment(appointment);
     }
 
-    //commit changes
     private void closeForm() {
         try {
             // Get only the current stage (appointment form window)
@@ -850,7 +849,6 @@ public class CreateAppointmentController implements Initializable {
     }
 
 
-    //alert
     private void showAlert(AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

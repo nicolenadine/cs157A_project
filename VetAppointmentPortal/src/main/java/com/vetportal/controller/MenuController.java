@@ -54,7 +54,7 @@ public class MenuController {
         String imagePath = "/images/profile.png";
 
         // Create an image from the resource path
-        Image image = new Image(getClass().getResourceAsStream("/media/icon.png"));
+        Image image = new Image(getClass().getResourceAsStream("/images/vet-logo.png"));
 
         profileImage.setFill(new ImagePattern(image));
     }

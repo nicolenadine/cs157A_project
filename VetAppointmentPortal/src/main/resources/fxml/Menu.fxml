@@ -17,7 +17,7 @@
             </Button>
 
             <!-- Center the circle -->
-            <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="150.0" layoutY="190.0" radius="115.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="35.0" />
+            <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="150.2" layoutY="185.0" radius="115.0" AnchorPane.leftAnchor="35.19999999999999" AnchorPane.rightAnchor="37.19999999999999" />
 
             <!-- Center the Hello User label -->
             <Label alignment="CENTER" layoutX="0.0" layoutY="315.0" text="Hello, User!" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

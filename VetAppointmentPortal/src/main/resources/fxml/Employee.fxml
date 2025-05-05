@@ -64,12 +64,6 @@
                 <Font name="System Bold" size="36.0" />
             </font>
         </Label>
-
-        <Button fx:id="editAppointmentButton" layoutX="652.0" layoutY="405.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="74.0" text="Edit">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Button>
         <Label fx:id="roleLabel" layoutX="327.0" layoutY="145.0" text="Role:">
             <font>
                 <Font size="26.0" />

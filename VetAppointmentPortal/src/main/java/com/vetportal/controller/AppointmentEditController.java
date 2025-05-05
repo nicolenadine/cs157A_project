@@ -32,28 +32,11 @@ import java.util.ResourceBundle;
  */
 public class AppointmentEditController implements Initializable {
 
-    @FXML
-    private TextField appointmentIdField;
-
-    @FXML
-    private DatePicker datePicker;
-
-    @FXML
-    private ComboBox<String> timeComboBox;
-
-    @FXML
-    private ComboBox<Pet> petComboBox;
-
-    @FXML
-    private ComboBox<Employee> providerComboBox;
-
-    // Status and notes fields removed as they are not supported
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
+    @FXML private TextField appointmentIdField;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<String> timeComboBox;
+    @FXML private ComboBox<Pet> petComboBox;
+    @FXML private ComboBox<Employee> providerComboBox;
 
     private AppointmentService appointmentService;
     private EmployeeService employeeService;
@@ -75,15 +58,13 @@ public class AppointmentEditController implements Initializable {
         // Set up time combo box with appointment time slots (30 minute increments)
         setupTimeComboBox();
 
-        // Load providers
-        loadProviders();
-
-        // Load pets
-        loadPets();
-
-        // Get appointment to edit
+        // Get appointment to edit FIRST, before loading related data
         appointment = AppointmentSearchController.AppointmentEditManager.getAppointmentToEdit();
+
         if (appointment != null) {
+            // Load providers and pets ONLY after we have a valid appointment
+            loadProviders();
+            loadPets();
             populateFields();
         } else {
             showAlert(Alert.AlertType.ERROR, "Error", "No Appointment Selected",
@@ -110,8 +91,6 @@ public class AppointmentEditController implements Initializable {
         timeComboBox.setItems(timeSlots);
     }
 
-    // Status combo box setup method removed as it is not supported
-
     /**
      * Loads all providers into the provider combo box.
      */
@@ -130,7 +109,7 @@ public class AppointmentEditController implements Initializable {
 
                 @Override
                 public Employee fromString(String string) {
-                    return null; // Not needed for this implementation
+                    return null; // Only needed because abstract
                 }
             });
         } else {
@@ -139,33 +118,35 @@ public class AppointmentEditController implements Initializable {
     }
 
     /**
-     * Loads all pets into the pet combo box.
+     * Loads pets for the customer into the pet combo box.
      */
     private void loadPets() {
-        // This would typically be filtered based on the customer,
-        // but for now we'll load all pets for simplicity
-        ObservableList<Pet> pets = FXCollections.observableArrayList();
+        if (appointment.getPet() != null && appointment.getPet().getOwner() != null) {
+            int customerId = appointment.getPet().getOwner().getID(); // Pull customerid through petid to get all pets
 
-        // For now, use the pet from the existing appointment
-        if (appointment != null && appointment.getPet() != null) {
-            pets.add(appointment.getPet());
+            ServiceResponse<List<Pet>> response = customerService.findPetsByCustomerId(customerId);
+
+            if (response.isSuccess()) {
+                ObservableList<Pet> pets = FXCollections.observableArrayList(response.getData());
+                petComboBox.setItems(pets);
+                petComboBox.setConverter(new StringConverter<Pet>() {
+                    @Override
+                    public String toString(Pet pet) {
+                        if (pet == null) {
+                            return null;
+                        }
+                        return pet.getName() + " (" + pet.getSpecies() + ", " + pet.getBreed() + ")";
+                    }
+
+                    @Override
+                    public Pet fromString(String string) {
+                        return null; // Only needed because abstract
+                    }
+                });
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to load pets", response.getMessage());
+            }
         }
-
-        petComboBox.setItems(pets);
-        petComboBox.setConverter(new StringConverter<Pet>() {
-            @Override
-            public String toString(Pet pet) {
-                if (pet == null) {
-                    return null;
-                }
-                return pet.getName() + " (" + pet.getOwner().getLastName() + ", " + pet.getOwner().getFirstName() + ")";
-            }
-
-            @Override
-            public Pet fromString(String string) {
-                return null; // Not needed for this implementation
-            }
-        });
     }
 
     /**
@@ -191,8 +172,6 @@ public class AppointmentEditController implements Initializable {
                 break;
             }
         }
-
-        // Status and notes fields removed as they are not supported
     }
 
     /**

@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -28,47 +27,19 @@ import com.vetportal.dto.LookupStatus;
  */
 public class AppointmentSearchController implements Initializable {
 
-    @FXML
-    private DatePicker datePicker;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<Employee> providerComboBox;
+    @FXML private TextField petIdTextField;
+    @FXML private Button editButton;
+    @FXML private Button deleteButton;
 
-    @FXML
-    private ComboBox<Employee> providerComboBox;
-
-    @FXML
-    private TextField petIdTextField;
-
-    @FXML
-    private Button searchButton;
-
-    @FXML
-    private Button clearButton;
-
-    @FXML
-    private Button editButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private TableView<Appointment> appointmentTable;
-
-    @FXML
-    private TableColumn<Appointment, Integer> idColumn;
-
-    @FXML
-    private TableColumn<Appointment, String> dateColumn;
-
-    @FXML
-    private TableColumn<Appointment, String> timeColumn;
-
-    @FXML
-    private TableColumn<Appointment, String> petNameColumn;
-
-    @FXML
-    private TableColumn<Appointment, String> ownerNameColumn;
-
-    @FXML
-    private TableColumn<Appointment, String> providerColumn;
+    @FXML private TableView<Appointment> appointmentTable;
+    @FXML private TableColumn<Appointment, Integer> idColumn;
+    @FXML private TableColumn<Appointment, String> dateColumn;
+    @FXML private TableColumn<Appointment, String> timeColumn;
+    @FXML private TableColumn<Appointment, String> petNameColumn;
+    @FXML private TableColumn<Appointment, String> ownerNameColumn;
+    @FXML private TableColumn<Appointment, String> providerColumn;
 
     private AppointmentService appointmentService;
     private EmployeeService employeeService;
@@ -276,8 +247,9 @@ public class AppointmentSearchController implements Initializable {
     @FXML
     private void handleDelete(ActionEvent event) {
         Appointment selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
+
+        // Confirm deletion
         if (selectedAppointment != null) {
-            // Confirm deletion
             Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmDialog.setTitle("Confirm Deletion");
             confirmDialog.setHeaderText("Delete Appointment");
@@ -287,8 +259,9 @@ public class AppointmentSearchController implements Initializable {
                     selectedAppointment.getTime() + "?");
 
             Optional<ButtonType> result = confirmDialog.showAndWait();
+
+            // Delete the appointment
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Delete the appointment
                 ServiceResponse<Boolean> response = appointmentService.deleteAppointment(selectedAppointment.getID());
                 if (response.isSuccess() && response.getData()) {
                     appointmentList.remove(selectedAppointment);

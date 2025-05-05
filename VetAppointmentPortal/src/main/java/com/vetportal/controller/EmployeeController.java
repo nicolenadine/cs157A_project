@@ -5,7 +5,6 @@ import com.vetportal.service.AppointmentService;
 import com.vetportal.service.EmployeeService;
 import com.vetportal.service.ServiceManager;
 import com.vetportal.dto.ServiceResponse;
-import com.vetportal.util.FXUtil;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,13 +19,12 @@ import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 public class EmployeeController {
     @FXML private TextField employeeLookupField;
+
     @FXML private Label nameLabel;
     @FXML private Label emailLabel;
     @FXML private Label phoneLabel;
@@ -34,9 +32,11 @@ public class EmployeeController {
     @FXML private Label roleLabel;
     @FXML private Label appointmentsLabel;
     @FXML private Label enterPrompt;
+
     @FXML private Button searchButton;
-    @FXML private Button editAppointmentButton;
+
     @FXML private Circle profileImage;
+
     @FXML private TableView<Appointment> appointmentsTableView;
     @FXML private TableColumn<Appointment, LocalDate> dateColumn;
     @FXML private TableColumn<Appointment, LocalTime> timeColumn;
@@ -135,7 +135,7 @@ public class EmployeeController {
     private void setProfileImage() {
         // Load default profile image
         try {
-            Image image = new Image(getClass().getResourceAsStream("/media/icon.png"));
+            Image image = new Image(getClass().getResourceAsStream("/images/icon.png"));
             profileImage.setFill(new ImagePattern(image));
         } catch (Exception e) {
             System.err.println("Error loading profile image: " + e.getMessage());
@@ -153,7 +153,6 @@ public class EmployeeController {
         addressLabel.setVisible(false);
         appointmentsLabel.setVisible(false);
         appointmentsTableView.setVisible(false);
-        editAppointmentButton.setVisible(false);
         profileImage.setVisible(false);
     }
 
@@ -217,7 +216,6 @@ public class EmployeeController {
         addressLabel.setVisible(true);
         appointmentsLabel.setVisible(true);
         appointmentsTableView.setVisible(true);
-        editAppointmentButton.setVisible(true);
         profileImage.setVisible(true);
 
         // Remove lookup field, label, and button
@@ -234,17 +232,6 @@ public class EmployeeController {
 
         // Load appointments for this employee
         loadAppointmentsForEmployee(employee.getID());
-    }
-
-    //might remove
-    @FXML
-    private void handleEditAppointment() {
-        Appointment selectedAppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
-        if (selectedAppointment != null) {
-            showAppointmentDetails(selectedAppointment);
-        } else {
-            showAlert("Please select an appointment to edit");
-        }
     }
 
     private void showAlert(String message) {

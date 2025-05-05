@@ -88,10 +88,5 @@
                 <Font name="System Bold" size="36.0" />
             </font>
         </Label>
-        <Button fx:id="editAppointmentButton" layoutX="802.0" layoutY="424.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="74.0" text="Edit">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Button>
     </children>
 </AnchorPane>

@@ -5,8 +5,6 @@ import com.vetportal.service.AppointmentService;
 import com.vetportal.service.ServiceManager;
 import com.vetportal.service.CustomerService;
 import com.vetportal.dto.ServiceResponse;
-import com.vetportal.util.FXUtil;
-import com.vetportal.util.CommonUtil;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,24 +12,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.application.Platform;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +30,7 @@ import java.util.Optional;
 
 public class CustomerController {
     @FXML private TextField customerLookupField;
+
     @FXML private Label nameLabel;
     @FXML private Label emailLabel;
     @FXML private Label phoneLabel;
@@ -47,25 +38,16 @@ public class CustomerController {
     @FXML private Label addressLabel;
     @FXML private Label appointmentsLabel;
     @FXML private Label enterPrompt;
+
     @FXML private Button searchButton;
     @FXML private Button addNewCustomerButton;
     @FXML private Button addPetButton;
     @FXML private Button editPetButton;
-    @FXML private Button editAppointmentButton;
     @FXML private Button editCustomerButton;
-    @FXML private Circle customerPhoto;
+
     @FXML private TableView<Pet> petsTableView;
     @FXML private TableView<Appointment> appointmentsTableView;
-    @FXML private TableColumn<Pet, String> nameColumn;
-    @FXML private TableColumn<Pet, String> speciesColumn;
-    @FXML private TableColumn<Pet, String> breedColumn;
-    @FXML private TableColumn<Pet, LocalDate> birthDateColumn;
-    @FXML private TableColumn<Appointment, LocalDate> dateColumn;
-    @FXML private TableColumn<Appointment, LocalTime> timeColumn;
-    @FXML private TableColumn<Appointment, String> typeColumn;
-    @FXML private TableColumn<Appointment, String> petColumn;
-    @FXML private TableColumn<Appointment, String> providerColumn;
-    @FXML private VBox customerInfoContainer;
+
     @FXML private Circle profileImage;
 
     private CustomerService customerService;
@@ -235,7 +217,7 @@ public class CustomerController {
         // Request focus on the ComboBox
         Platform.runLater(() -> petComboBox.requestFocus());
 
-        // Enable/Disable the Select button depending on whether a pet has been selected
+        // Enable or Disable the Select button depending on whether a pet has been selected
         Button selectButton = (Button) dialog.getDialogPane().lookupButton(selectButtonType);
         selectButton.setDisable(true);
 
@@ -431,7 +413,7 @@ public class CustomerController {
         String imagePath = "/images/profile.png";
 
         // Create an image from the resource path
-        Image image = new Image(getClass().getResourceAsStream("/media/icon.png"));
+        Image image = new Image(getClass().getResourceAsStream("/images/icon.png"));
 
         profileImage.setFill(new ImagePattern(image));
     }
@@ -446,7 +428,6 @@ public class CustomerController {
         if (appointmentsLabel != null) appointmentsLabel.setVisible(false);
         if (petsTableView != null) petsTableView.setVisible(false);
         if (appointmentsTableView != null) appointmentsTableView.setVisible(false);
-        if (editAppointmentButton != null) editAppointmentButton.setVisible(false);
         if (editPetButton != null) editPetButton.setVisible(false);
         if (addPetButton != null) addPetButton.setVisible(false);
         if (editCustomerButton != null) editCustomerButton.setVisible(false);
@@ -836,7 +817,6 @@ public class CustomerController {
         appointmentsTableView.setVisible(true);
         addPetButton.setVisible(true);
         editPetButton.setVisible(true);
-        editAppointmentButton.setVisible(true);
         editCustomerButton.setVisible(true);
         profileImage.setVisible(true);
 
