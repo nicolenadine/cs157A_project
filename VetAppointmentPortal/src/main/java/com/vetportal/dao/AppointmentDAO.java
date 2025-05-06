@@ -179,21 +179,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
      * @throws DataAccessException if a database error occurs
      */
     public List<Appointment> findAllAppointmentsByDate(LocalDate date) {
-        String query = """
-        SELECT a.appointment_id, date(a.date) as date, a.time, 
-        a.provider, a.appointment_type, a.pet,
-        e.employee_id, e.first_name as employee_first_name, e.last_name as employee_last_name, 
-        e.role, e.address as employee_address, e.phone as employee_phone, e.email as employee_email,
-        p.pet_id, p.pet_name, p.species, p.breed, date(p.birth_date) as birth_date, p.owner,
-        c.customer_id, c.first_name as customer_first_name, c.last_name as customer_last_name, 
-        c.address as customer_address, c.phone as customer_phone, c.email as customer_email
-        FROM Appointment a
-        JOIN Employee e ON a.provider = e.employee_id
-        JOIN Pet p ON a.pet = p.pet_id
-        JOIN Customer c ON p.owner = c.customer_id
-        WHERE date(a.date) = ?
-        ORDER BY a.time
-        """;
+        String query = "SELECT * FROM AppointmentDetailView WHERE date = ? ORDER BY time";
 
         List<Appointment> appointments = new ArrayList<>();
 
