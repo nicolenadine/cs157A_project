@@ -11,18 +11,31 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.EmployeeController">
     <children>
-        <!-- Centered TextField by setting layout position to (AnchorPane width - TextField width)/2 -->
+
         <TextField fx:id="employeeLookupField" alignment="CENTER" layoutX="349.0" layoutY="350.0" prefHeight="26.0" prefWidth="202.0" promptText="ID" AnchorPane.leftAnchor="349.0" AnchorPane.rightAnchor="349.0" />
-
-        <!-- Centered Button by setting layout position to (AnchorPane width - Button width)/2 -->
-        <Button fx:id="searchButton" alignment="CENTER" layoutX="398.5" layoutY="410.0" onAction="#handleEmployeeById" prefHeight="26.0" prefWidth="103.0" text="Search" AnchorPane.leftAnchor="398.5" AnchorPane.rightAnchor="398.5" />
-
+        <AnchorPane layoutX="349.0" layoutY="410.0" prefHeight="26.0" prefWidth="202.0" AnchorPane.leftAnchor="349.0" AnchorPane.rightAnchor="349.0">
+            <children>
+                <Button fx:id="searchButton" alignment="CENTER" layoutX="0.0" layoutY="0.0" onAction="#handleEmployeeById" prefHeight="26.0" prefWidth="101.0" text="Search" />
+                <Button fx:id="addNewEmployeeButton" alignment="CENTER" layoutX="101.0" layoutY="0.0" prefHeight="26.0" prefWidth="101.0" text="New Employee" />
+            </children>
+        </AnchorPane>
         <Label alignment="CENTER" layoutX="225.0" layoutY="14.0" text="Employee Information" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="225.0">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
         </Label>
         <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="145.0" layoutY="195.0" radius="115.0" />
+        <Button fx:id="editEmployeeButton" layoutX="55.0" layoutY="320.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Edit Details">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="deleteEmployeeButton" layoutX="155.0" layoutY="320.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Delete">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+
         <Label fx:id="nameLabel" layoutX="327.0" layoutY="95.0" text="Name:">
             <font>
                 <Font size="26.0" />

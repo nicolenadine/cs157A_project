@@ -14,7 +14,7 @@ public class AppointmentWithJoinMapper implements EntityMapper<Appointment> {
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", "appointment_id");
-        map.put("date", "date");
+        map.put("date", "appointment_date");
         map.put("time", "time");
         map.put("provider", "provider");
         map.put("appointmentType", "appointment_type");
@@ -62,7 +62,7 @@ public class AppointmentWithJoinMapper implements EntityMapper<Appointment> {
 
         return new Appointment(
                 rs.getInt("appointment_id"),
-                LocalDate.parse(rs.getString("date")),
+                LocalDate.parse(rs.getString("appointment_date")),
                 LocalTime.parse(rs.getString("time")),
                 provider,
                 AppointmentType.valueOf(rs.getString("appointment_type")),

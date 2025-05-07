@@ -839,7 +839,9 @@ public class CreateAppointmentController implements Initializable {
             Stage stage = (Stage) saveButton.getScene().getWindow();
 
             // Close only this stage, not the entire application otherwise app closes after appointment creation
-            stage.close();
+            stage.setOnCloseRequest(event -> {
+                event.consume(); // Prevent the default close behavior
+            });
 
             System.out.println("Successfully closed appointment form window");
         } catch (Exception e) {

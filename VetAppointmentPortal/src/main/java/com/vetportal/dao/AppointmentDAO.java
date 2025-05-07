@@ -38,7 +38,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
 
     @Override
     protected List<String> getOrderedAttributes() {
-        return List.of("date", "time", "provider", "appointment_type", "pet");
+        return List.of("appointment_date", "time", "provider", "appointment_type", "pet");
     }
 
     @Override
@@ -179,7 +179,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
      * @throws DataAccessException if a database error occurs
      */
     public List<Appointment> findAllAppointmentsByDate(LocalDate date) {
-        String query = "SELECT * FROM AppointmentDetailView WHERE date = ? ORDER BY time";
+        String query = "SELECT * FROM AppointmentDetailView WHERE appointment_date = ? ORDER BY time";
 
         List<Appointment> appointments = new ArrayList<>();
 
@@ -239,7 +239,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
     public boolean isProviderSlotTaken(int providerId, String date, String time, Integer excludeAppointmentId) {
         String sql = """
         SELECT 1 FROM Appointment
-        WHERE provider = ? AND date(date) = ? AND time = ?
+        WHERE provider = ? AND date(appointment_date) = ? AND time = ?
         AND appointment_id != ?
         LIMIT 1
         """;

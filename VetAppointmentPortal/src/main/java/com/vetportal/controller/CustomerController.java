@@ -34,7 +34,6 @@ public class CustomerController {
     @FXML private Label nameLabel;
     @FXML private Label emailLabel;
     @FXML private Label phoneLabel;
-    @FXML private Label petsLabel;
     @FXML private Label addressLabel;
     @FXML private Label appointmentsLabel;
     @FXML private Label enterPrompt;
@@ -43,7 +42,9 @@ public class CustomerController {
     @FXML private Button addNewCustomerButton;
     @FXML private Button addPetButton;
     @FXML private Button editPetButton;
+    @FXML private Button deletePetButton;
     @FXML private Button editCustomerButton;
+    @FXML private Button deleteCustomerButton;
 
     @FXML private TableView<Pet> petsTableView;
     @FXML private TableView<Appointment> appointmentsTableView;
@@ -71,10 +72,6 @@ public class CustomerController {
             }
         });
 
-        // Set default styling for section headers
-        petsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        appointmentsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
         // Set up action handlers for pet buttons
         if (editPetButton != null) {
             editPetButton.setOnAction(event -> handleEditPet());
@@ -84,9 +81,58 @@ public class CustomerController {
             addPetButton.setOnAction(event -> handleAddPet());
         }
 
+        if (deletePetButton != null) {
+            deletePetButton.setOnAction(event -> handleDeletePet());
+        }
+
+        if (deleteCustomerButton != null) {
+            deleteCustomerButton.setOnAction(event -> handleDeleteCustomer());
+        }
+
         // Hide customer information initially
         hideCustomerInfo();
         setProfileImage();
+    }
+
+    @FXML
+    private void handleDeleteCustomer() {
+        if (currentCustomer == null) {
+            showAlert("No customer selected");
+            return;
+        }
+
+        // Show confirmation dialog with warning about pets being deleted too
+        Alert confirmDialog = new Alert(AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Delete Customer");
+        confirmDialog.setHeaderText("Are you sure you want to delete " +
+                currentCustomer.getFirstName() + " " + currentCustomer.getLastName() + "?");
+        confirmDialog.setContentText("WARNING: This will also delete all pets associated with this customer. " +
+                "This action cannot be undone.");
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Call the existing deleteCustomer method in the service
+            boolean success = customerService.deleteCustomer(currentCustomer.getID());
+
+            if (success) {
+                // Clear the customer information and reset the UI
+                currentCustomer = null;
+                hideCustomerInfo();
+
+                // Show the customer lookup fields again
+                enterPrompt.setVisible(true);
+                customerLookupField.setVisible(true);
+                searchButton.setVisible(true);
+                addNewCustomerButton.setVisible(true);
+
+                // Clear the lookup field
+                customerLookupField.setText("");
+
+                showAlert("Customer deleted successfully!");
+            } else {
+                showAlert("Error deleting customer");
+            }
+        }
     }
 
     private void handlePetClick() {
@@ -161,6 +207,58 @@ public class CustomerController {
                 }
             }
         }
+    }
+
+    @FXML
+    private void handleDeletePet() {
+        if (currentCustomer == null) {
+            showAlert("No customer selected");
+            return;
+        }
+
+        // Get all pets for the dropdown
+        ServiceResponse<List<Pet>> petsResponse = customerService.findPetsByCustomerId(currentCustomer.getID());
+
+        if (!petsResponse.isSuccess() || petsResponse.getData().isEmpty()) {
+            showAlert("No pets found for this customer");
+            return;
+        }
+
+        // Show pet selection dialog (reusing your existing dialog)
+        Pet selectedPet = showPetSelectionDialog(petsResponse.getData());
+
+        if (selectedPet != null) {
+            // Show confirmation dialog
+            Alert confirmDialog = new Alert(AlertType.CONFIRMATION);
+            confirmDialog.setTitle("Delete Pet");
+            confirmDialog.setHeaderText("Are you sure you want to delete " + selectedPet.getName() + "?");
+            confirmDialog.setContentText("This action cannot be undone.");
+
+            Optional<ButtonType> result = confirmDialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Call the existing deletePet method in the service
+                boolean success = customerService.deletePet(selectedPet.getID());
+
+                if (success) {
+                    // Refresh the pets table
+                    loadPets(currentCustomer.getID());
+                    showAlert("Pet deleted successfully!");
+                } else {
+                    showAlert("Error deleting pet");
+                }
+            }
+        }
+    }
+
+    // Helper method for confirmation dialogs
+    private boolean showDeleteConfirmation(String title, String header, String content) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private Pet showPetSelectionDialog(List<Pet> pets) {
@@ -423,14 +521,15 @@ public class CustomerController {
         if (nameLabel != null) nameLabel.setVisible(false);
         if (emailLabel != null) emailLabel.setVisible(false);
         if (phoneLabel != null) phoneLabel.setVisible(false);
-        if (petsLabel != null) petsLabel.setVisible(false);
         if (addressLabel != null) addressLabel.setVisible(false);
         if (appointmentsLabel != null) appointmentsLabel.setVisible(false);
         if (petsTableView != null) petsTableView.setVisible(false);
         if (appointmentsTableView != null) appointmentsTableView.setVisible(false);
         if (editPetButton != null) editPetButton.setVisible(false);
+        if (deletePetButton != null) deletePetButton.setVisible(false);
         if (addPetButton != null) addPetButton.setVisible(false);
         if (editCustomerButton != null) editCustomerButton.setVisible(false);
+        if (deleteCustomerButton != null) deleteCustomerButton.setVisible(false);
         if (profileImage != null) profileImage.setVisible(false);
     }
 
@@ -678,19 +777,9 @@ public class CustomerController {
             ObservableList<Pet> petData = FXCollections.observableArrayList(pets);
             petsTableView.setItems(petData);
 
-            // Show a message if no pets are found with smaller font size
-            if (pets.isEmpty()) {
-                petsLabel.setText("No pets found for this customer");
-                petsLabel.setStyle("-fx-font-size: 14px;");
-            } else {
-                petsLabel.setText("Pets:");
-                petsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-            }
         } else {
             // Clear the table if there was an error
             petsTableView.setItems(FXCollections.observableArrayList());
-            petsLabel.setText("Error loading pets");
-            petsLabel.setStyle("-fx-font-size: 14px;");
             showAlert("Error loading pets: " + response.getMessage());
         }
     }
@@ -721,6 +810,10 @@ public class CustomerController {
             Pet pet = cellData.getValue();
             return new javafx.beans.property.SimpleObjectProperty<>(pet.getBirthDate());
         });
+
+        Label noPetsLabel = new Label("No pets found for this customer");
+        noPetsLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #757575;");
+        petsTableView.setPlaceholder(noPetsLabel);
     }
 
     private void loadAppointmentsForCustomer(int CustomerID) {
@@ -728,9 +821,8 @@ public class CustomerController {
 
         if (!petsResponse.isSuccess() || petsResponse.getData().isEmpty()) {
             //no pets or error getting pets
-            appointmentsTableView.setItems(FXCollections.observableArrayList());
-            appointmentsLabel.setText("No appointments found");
-            appointmentsLabel.setStyle("-fx-font-size: 14px;");
+            appointmentsLabel.setText("Appointments:");
+            appointmentsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
             return;
         }
 
@@ -803,6 +895,10 @@ public class CustomerController {
             return new SimpleStringProperty(provider != null ?
                     provider.getFirstName() + " " + provider.getLastName() : "");
         });
+
+        Label noAppointmentsLabel = new Label("No appointments found for this customer");
+        noAppointmentsLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #757575;");
+        appointmentsTableView.setPlaceholder(noAppointmentsLabel);
     }
 
     private void displayCustomerInfo(Customer customer) {
@@ -810,14 +906,15 @@ public class CustomerController {
         nameLabel.setVisible(true);
         emailLabel.setVisible(true);
         phoneLabel.setVisible(true);
-        petsLabel.setVisible(true);
         addressLabel.setVisible(true);
         appointmentsLabel.setVisible(true);
         petsTableView.setVisible(true);
         appointmentsTableView.setVisible(true);
         addPetButton.setVisible(true);
         editPetButton.setVisible(true);
+        deletePetButton.setVisible(true);
         editCustomerButton.setVisible(true);
+        deleteCustomerButton.setVisible(true);
         profileImage.setVisible(true);
 
         //remove lookup field, label, and button
