@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.EmployeeController">
+    <children>
+
+        <TextField fx:id="employeeLookupField" alignment="CENTER" layoutX="349.0" layoutY="350.0" prefHeight="26.0" prefWidth="202.0" promptText="ID" AnchorPane.leftAnchor="349.0" AnchorPane.rightAnchor="349.0" />
+        <AnchorPane layoutX="349.0" layoutY="410.0" prefHeight="26.0" prefWidth="202.0" AnchorPane.leftAnchor="349.0" AnchorPane.rightAnchor="349.0">
+            <children>
+                <Button fx:id="searchButton" alignment="CENTER" layoutX="0.0" layoutY="0.0" onAction="#handleEmployeeById" prefHeight="26.0" prefWidth="101.0" text="Search" />
+                <Button fx:id="addNewEmployeeButton" alignment="CENTER" layoutX="101.0" layoutY="0.0" prefHeight="26.0" prefWidth="101.0" text="New Employee" />
+            </children>
+        </AnchorPane>
+        <Label alignment="CENTER" layoutX="225.0" layoutY="14.0" text="Employee Information" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="225.0">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+        <Circle fx:id="profileImage" fill="DODGERBLUE" layoutX="145.0" layoutY="195.0" radius="115.0" />
+        <Button fx:id="editEmployeeButton" layoutX="55.0" layoutY="320.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Edit Details">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="deleteEmployeeButton" layoutX="155.0" layoutY="320.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Delete">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+
+        <Label fx:id="nameLabel" layoutX="327.0" layoutY="95.0" text="Name:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
+        <Label fx:id="emailLabel" layoutX="327.0" layoutY="195.0" text="Email:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
+        <Label fx:id="phoneLabel" layoutX="327.0" layoutY="245.0" text="Phone #:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
+        <Label fx:id="addressLabel" layoutX="327.0" layoutY="295.0" text="Address:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
+        <TableView fx:id="appointmentsTableView" layoutX="175.0" layoutY="445.0" prefHeight="300.0" prefWidth="552.0">
+            <columns>
+                <TableColumn fx:id="dateColumn" prefWidth="111.99999809265137" text="Date" />
+                <TableColumn fx:id="timeColumn" prefWidth="90.39997100830078" text="Time" />
+                <TableColumn fx:id="petColumn" prefWidth="79.20001220703125" text="Pet" />
+                <TableColumn fx:id="typeColumn" prefWidth="100.800048828125" text="Type" />
+                <TableColumn fx:id="providerColumn" prefWidth="163.99990844726562" text="Provider" />
+            </columns>
+        </TableView>
+        <Label fx:id="appointmentsLabel" layoutX="175.0" layoutY="400.0" text="Appointments">
+            <font>
+                <Font name="System Bold" size="28.0" />
+            </font>
+        </Label>
+
+        <!-- Centered Label with adjusted layoutX -->
+        <Label fx:id="enterPrompt" alignment="CENTER" layoutX="198.0" layoutY="245.0" text="Enter Employee ID Number" AnchorPane.leftAnchor="198.0" AnchorPane.rightAnchor="198.0">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+        <Label fx:id="roleLabel" layoutX="327.0" layoutY="145.0" text="Role:">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

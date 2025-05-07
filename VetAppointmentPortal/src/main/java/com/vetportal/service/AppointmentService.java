@@ -268,11 +268,14 @@ public class AppointmentService {
      * @return true if the slot is already taken, false otherwise
      */
     public boolean isProviderSlotTaken(int providerId, LocalDate date, LocalTime time, Integer excludeAppointmentId) {
+
+        String formattedTime = String.format("%02d:%02d", time.getHour(), time.getMinute());
+
         try {
             return appointmentDAO.isProviderSlotTaken(
                     providerId,
                     date.toString(),
-                    time.toString(),
+                    formattedTime,
                     excludeAppointmentId != null ? excludeAppointmentId : 0
             );
         } catch (DataAccessException e) {

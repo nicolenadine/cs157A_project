@@ -88,7 +88,7 @@ public class DatabaseInitializer {
                 if (line.trim().startsWith("--") || line.trim().isEmpty()) {
                     continue;
                 }
-                sb.append(line);
+                sb.append(line).append("\n");
 
                 // Execute statement when it gets to a semicolon
                 if (line.trim().endsWith(";")) {

@@ -1,0 +1,8 @@
+# Ensure all text files use LF in repo, auto-converted on checkout
+* text=auto
+
+# Explicitly set FXML and other source files to auto
+*.fxml text
+*.java text
+*.xml text
+*.properties text

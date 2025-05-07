@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vetportal.controller.HomeController">
+    <children>
+        <TableView fx:id="todayTable" layoutX="115.0" layoutY="113.0" prefHeight="290.0" prefWidth="699.0">
+            <columns>
+                <TableColumn fx:id="Appointment_ID" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="Date" prefWidth="150.0" text="Date" />
+                <TableColumn fx:id="Time" prefWidth="150.0" text="Time" />
+                <TableColumn fx:id="Provider" prefWidth="150.0" text="Provider" />
+                <TableColumn fx:id="pet" prefWidth="172.00004882812505" text="Pet" />
+            </columns>
+        </TableView>
+
+        <Label layoutX="199.0" text="Vet Appointment Portal">
+            <font>
+                <Font size="48.0" />
+            </font>
+        </Label>
+
+        <Label fx:id="todayLabel" layoutX="95.0" layoutY="78.0" text="Today's Appointments">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
+
+        <DatePicker fx:id="todayDatePicker" layoutX="630.0" layoutY="78.0" promptText="Select Date" />
+      <TableView fx:id="customersTable" layoutX="115.0" layoutY="474.0" prefHeight="280.0" prefWidth="335.0">
+        <columns>
+          <TableColumn fx:id="customerNameColumn" prefWidth="110.0" text="Name" />
+          <TableColumn fx:id="customerPhoneColumn" prefWidth="90.0" text="Phone #" />
+            <TableColumn fx:id="customerEmailColumn" prefWidth="133.59999389648436" text="Email" />
+        </columns>
+      </TableView>
+      <Label layoutX="95.0" layoutY="440.0" text="Customers">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <TableView fx:id="employeesTable" layoutX="478.0" layoutY="474.0" prefHeight="280.0" prefWidth="335.0">
+        <columns>
+          <TableColumn fx:id="employeeNameColumn" prefWidth="110.0" text="Name" />
+          <TableColumn fx:id="roleColumn" prefWidth="110.0" text="Role" />
+            <TableColumn fx:id="employeePhoneColumn" prefWidth="110.0" text="Phone" />
+        </columns>
+      </TableView>
+      <Label layoutX="465.0" layoutY="440.0" text="Employees">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

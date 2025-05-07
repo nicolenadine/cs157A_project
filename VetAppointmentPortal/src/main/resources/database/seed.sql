@@ -58,18 +58,18 @@ INSERT INTO Employee (first_name, last_name, address, phone, email, role) VALUES
 
 
 -- APPOINTMENTS
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '14:30:00', 7, 'CHECKUP', 4);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '15:45:00', 8, 'CHECKUP', 4);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '10:45:00', 6, 'CHECKUP', 1);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '16:30:00', 9, 'SURGERY', 2);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '16:45:00', 10, 'EMERGENCY', 5);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '15:30:00', 7, 'CHECKUP', 10);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '12:30:00', 15, 'CHECKUP', 4);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-17', '12:00:00', 5, 'EMERGENCY', 3);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-13', '13:30:00', 13, 'VACCINATION', 10);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '13:30:00', 12, 'DENTAL', 10);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '11:45:00', 11, 'CHECKUP', 2);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '12:30:00', 8, 'DENTAL', 5);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '11:15:00', 12, 'EMERGENCY', 2);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '11:30:00', 15, 'VACCINATION', 9);
-INSERT INTO Appointment (date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '12:15:00', 14, 'SURGERY', 7);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '14:30:00', 7, 'CHECKUP', 4);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '15:45:00', 8, 'CHECKUP', 4);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '10:45:00', 6, 'CHECKUP', 1);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '16:30:00', 9, 'SURGERY', 2);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '16:45:00', 10, 'EMERGENCY', 5);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '15:30:00', 7, 'CHECKUP', 10);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '12:30:00', 15, 'CHECKUP', 4);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-17', '12:00:00', 5, 'EMERGENCY', 3);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-13', '13:30:00', 13, 'VACCINATION', 10);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '13:30:00', 12, 'DENTAL', 10);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '11:45:00', 11, 'CHECKUP', 2);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '12:30:00', 8, 'DENTAL', 5);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-10', '11:15:00', 12, 'EMERGENCY', 2);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-11', '11:30:00', 15, 'VACCINATION', 9);
+INSERT INTO Appointment (appointment_date, time, provider, appointment_type, pet) VALUES ('2025-05-12', '12:15:00', 14, 'SURGERY', 7);

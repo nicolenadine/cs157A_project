@@ -8,6 +8,7 @@ import com.vetportal.exception.DataAccessException;
 import com.vetportal.model.Customer;
 import com.vetportal.model.Pet;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.sql.Connection;
@@ -212,12 +213,24 @@ public class CustomerService {
             }
 
             List<Pet> pets = petDAO.findAllPetsByCustomerId(customerID);
-            if (pets.isEmpty()) {
-                return ServiceResponse.notFound("No pets found for customer ID " + customerID);
-            }
+            // Return success even if the list is empty
             return ServiceResponse.success(pets);
         } catch (Exception e) {
             return ServiceResponse.dbError("Error retrieving pets for customer ID " + customerID + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieves all customers from the database.
+     *
+     * @return a list containing all customers in the database
+     */
+    public List<Customer> getAllCustomers() {
+        try {
+            return customerDAO.findAll(); // Assuming CustomerDAO has a findAll method
+        } catch (DataAccessException e) {
+            System.err.println("Error retrieving all customers: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 }

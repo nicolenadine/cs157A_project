@@ -1,45 +1,49 @@
 package com.vetportal.model;
 
 public class Customer {
-    private Integer id;
-    private String firstname;
-    private String lastname;
+    private Integer ID;
+    private String firstName;
+    private String lastName;
     private String address;
     private String phone;
     private String email;
 
-    public Customer(Integer id, String firstname, String lastname,String address, String phone, String email) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public Customer() {
+        // Default constructor
+    }
+
+    public Customer(Integer ID, String firstName, String lastName, String address, String phone, String email) {
+        this.ID = ID;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.address = address;
         this.phone = phone;
         this.email = email;
-
     }
 
+    // Getters and Setters
     public Integer getID() {
-        return id;
+        return ID;
     }
 
-    public void setID(Integer id) {
-        this.id = id;
+    public void setID(Integer ID) {
+        this.ID = ID;
     }
 
     public String getFirstName() {
-        return firstname;
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return lastname;
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getAddress() {
@@ -66,4 +70,8 @@ public class Customer {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }
