@@ -494,6 +494,7 @@ public class EmployeeController {
         enterPrompt.setVisible(false);
         employeeLookupField.setVisible(false);
         searchButton.setVisible(false);
+        addNewEmployeeButton.setVisible(false);
 
         // Update labels with employee data
         nameLabel.setText("Name: " + employee.getFirstName() + " " + employee.getLastName());

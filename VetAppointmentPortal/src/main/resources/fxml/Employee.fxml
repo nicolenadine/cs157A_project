@@ -71,7 +71,6 @@
             </font>
         </Label>
 
-        <!-- Centered Label with adjusted layoutX -->
         <Label fx:id="enterPrompt" alignment="CENTER" layoutX="198.0" layoutY="245.0" text="Enter Employee ID Number" AnchorPane.leftAnchor="198.0" AnchorPane.rightAnchor="198.0">
             <font>
                 <Font name="System Bold" size="36.0" />
