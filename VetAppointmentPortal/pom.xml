@@ -36,11 +36,11 @@
             <version>${javafx.version}</version>
         </dependency>
 
-        <!-- Optional: ControlsFX UI components -->
+        <!-- ControlsFX UI components -->
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.1.2</version> <!-- 11.2.1 has known resolution issues -->
+            <version>11.1.2</version>
         </dependency>
 
         <!-- JUnit 5 for testing -->
