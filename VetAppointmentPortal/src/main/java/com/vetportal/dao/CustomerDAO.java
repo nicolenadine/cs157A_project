@@ -39,6 +39,7 @@ public class CustomerDAO extends BaseDAO<Customer> {
         statement.setInt(6, customer.getID());
     }
 
+    // These lines shared between previous two methods. prevents unnecessary duplication
     protected void setNonIdAttributes(PreparedStatement statement, Customer customer) throws SQLException {
         statement.setString(1, customer.getFirstName());
         statement.setString(2, customer.getLastName());

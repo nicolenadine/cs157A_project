@@ -227,7 +227,7 @@ public class CustomerService {
      */
     public List<Customer> getAllCustomers() {
         try {
-            return customerDAO.findAll(); // Assuming CustomerDAO has a findAll method
+            return customerDAO.findAll();
         } catch (DataAccessException e) {
             System.err.println("Error retrieving all customers: " + e.getMessage());
             return new ArrayList<>();

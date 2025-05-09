@@ -1,8 +1,8 @@
 package com.vetportal.exception;
 
 /**
- * Custom unchecked exception used to indicate failures during database access or operations.
- * Wraps lower-level SQL or JDBC exceptions to decouple service logic from direct database errors.
+ * Custom exception class used to indicate failures during database access or operations.
+ * Wraps lower-level SQL exceptions with business logic explanations of failures.
  */
 public class DataAccessException extends RuntimeException {
 

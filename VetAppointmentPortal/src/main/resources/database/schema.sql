@@ -1,10 +1,8 @@
 -- Clear existing data for testing
-PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS Appointment;
 DROP TABLE IF EXISTS Pet;
 DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS Appointment;
 DROP TABLE IF EXISTS Employee;
 
 CREATE TABLE IF NOT EXISTS Customer
@@ -71,6 +69,7 @@ FROM Appointment a
          JOIN Customer c ON p.owner = c.customer_id;
 
 
+PRAGMA foreign_keys = ON;
 
 
 

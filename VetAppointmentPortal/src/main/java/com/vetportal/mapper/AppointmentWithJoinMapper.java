@@ -8,8 +8,12 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
+// This version of appointment mapping is intended for use when many appointments are retrieved
+// and results are based on a join of Appointments with Employee, Pet, and Customer usually via
+// the AppointmentDetailView table view. Since the join result returns all required fields for
+// creating Employee, Customer, and Pet objects there is no need for separate lookup.
 public class AppointmentWithJoinMapper implements EntityMapper<Appointment> {
-
+    // Key = Java Entity attributes, Value = corresponding field name in database table
     @Override
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
@@ -65,6 +69,7 @@ public class AppointmentWithJoinMapper implements EntityMapper<Appointment> {
                 LocalDate.parse(rs.getString("appointment_date")),
                 LocalTime.parse(rs.getString("time")),
                 provider,
+                // Convert DB string to AppointmentType enum
                 AppointmentType.valueOf(rs.getString("appointment_type")),
                 pet,
                 owner

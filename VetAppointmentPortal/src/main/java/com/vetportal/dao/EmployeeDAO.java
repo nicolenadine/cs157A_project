@@ -38,6 +38,7 @@ public class EmployeeDAO extends BaseDAO<Employee> {
         statement.setInt(7, employee.getID());
     }
 
+    // These lines shared between previous two methods. prevents unnecessary duplication
     protected void setNonIdAttributes(PreparedStatement statement, Employee employee) throws SQLException {
         statement.setString(1, employee.getFirstName());
         statement.setString(2, employee.getLastName());

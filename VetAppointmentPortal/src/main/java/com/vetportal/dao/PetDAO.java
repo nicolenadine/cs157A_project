@@ -38,6 +38,7 @@ public class PetDAO extends BaseDAO<Pet> {
         statement.setInt(6, pet.getID());
     }
 
+    // These lines shared between previous two methods. prevents unnecessary duplication
     protected void setNonIdAttributes(PreparedStatement statement, Pet pet) throws SQLException {
         statement.setString(1, pet.getName());
         statement.setString(2, pet.getSpecies());
@@ -108,6 +109,8 @@ public class PetDAO extends BaseDAO<Pet> {
      */
     @Override
     public Optional<Pet> findByID(Integer id) {
+        // We join with Customer table because returning the pet object requires
+        // the owner data from the customer table
         String query = """
         SELECT p.pet_id, p.pet_name, p.species, p.breed,
         date(p.birth_date) as birth_date, p.owner, c.*
@@ -148,10 +151,13 @@ public class PetDAO extends BaseDAO<Pet> {
     public Optional<Pet> findByAttributes(Map<String, String> attributes) {
         Map<String, String> dbAttributes = translateAttributeNames(attributes);
 
+        // Creates a stream of attribute values and for each one appends the placeholder " = ?" after
+        // These conditions are then joined separated by the 'AND' modifier
         String conditions = dbAttributes.keySet().stream()
                 .map(field -> "p." + field + " = ?")
                 .collect(Collectors.joining(" AND "));
 
+        // Join Pet and Customer according to the WHERE conditions string created above
         String query = """
         SELECT p.pet_id, p.pet_name, p.species, p.breed,
         date(p.birth_date) as birth_date, p.owner,
@@ -162,6 +168,10 @@ public class PetDAO extends BaseDAO<Pet> {
         """ + conditions;
 
         try {
+            // Passes the query and the attributes by converting the attribute values to an array
+            // this is because the executeQueryForList method expects parameters as an Object[]
+            // .stream.findFirst() is a guard against an empty value set. Returns an empty optional
+            // if no values are found.
             return executeQueryForList(query, dbAttributes.values().toArray()).stream().findFirst();
         } catch (SQLException e) {
             throw new DataAccessException("Error finding Pet by attributes", e);
@@ -176,6 +186,8 @@ public class PetDAO extends BaseDAO<Pet> {
      * @throws DataAccessException if a database error occurs
      */
     public List<Pet> findAllPetsByCustomerId(int customerId) {
+
+       // Join of Pets on Customer where p.owner = customerID
         String query = """
         SELECT p.pet_id, p.pet_name, p.species, p.breed,
         date(p.birth_date) as birth_date, p.owner,
@@ -220,13 +232,18 @@ public class PetDAO extends BaseDAO<Pet> {
      */
     @Override
     protected String buildSelectQuery(Map<String, String> dbFields) {
+        // Create an array of WHERE conditions for each field
+        // Format: "p.field_name = ?" where 'p' is the pet table alias
         String[] conditions = dbFields.keySet().stream()
-                .map(field -> "p." + field + " = ?")
-                .toArray(String[]::new);
+                .map(field -> "p." + field + " = ?")  // Prefix each field with "p." and append " = ?"
+                .toArray(String[]::new);         // Convert stream results into a String array
 
+        // Selects the needed columns and joins Pet table with customer table
+        // where clause is all the conditions joined by AND
         return """
         SELECT p.pet_id, p.pet_name, p.species, p.breed,
         date(p.birth_date) as birth_date, p.owner, c.*
+        FROM Pet p
         JOIN Customer c ON p.owner = c.customer_id
         WHERE %s
     """.formatted(String.join(" AND ", conditions));

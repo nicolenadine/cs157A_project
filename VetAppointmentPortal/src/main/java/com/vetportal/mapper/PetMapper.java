@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PetMapper implements EntityMapper<Pet> {
+    // Key = Java Entity attributes, Value = corresponding field name in database table
     @Override
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
@@ -27,8 +28,12 @@ public class PetMapper implements EntityMapper<Pet> {
         return "Pet";
     }
 
+    // Extracts attribute values from database result set and
+    // creates a new Java Entity from returned db values
     @Override
     public Pet mapResultSetToEntity(ResultSet rs) throws SQLException {
+
+        // Create customer first since pet depends on customer id
         Customer owner = new Customer(
                 rs.getInt("customer_id"),
                 rs.getString("first_name"),
@@ -38,7 +43,7 @@ public class PetMapper implements EntityMapper<Pet> {
                 rs.getString("email")
         );
 
-
+        // Create and return pet using newly created customer object for owner attribute
         return new Pet(
                 rs.getInt("pet_id"),
                 rs.getString("pet_name"),
@@ -48,5 +53,4 @@ public class PetMapper implements EntityMapper<Pet> {
                 owner
         );
     }
-
 }

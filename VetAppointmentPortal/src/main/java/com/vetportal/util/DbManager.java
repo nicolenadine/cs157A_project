@@ -1,9 +1,6 @@
 package com.vetportal.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Manager class for database connections.
@@ -24,20 +21,8 @@ public class DbManager {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(URL);
 
-            // Makes sure foreign keys are enabled for referential integrity
-            try (Statement statement = connection.createStatement()) {
-                statement.execute("PRAGMA foreign_keys = ON;");
-
-
-                var rs = statement.executeQuery("PRAGMA foreign_keys;");
-                if (rs.next()) {
-                    int enabled = rs.getInt(1);
-                    System.out.println("Foreign keys status: " + (enabled == 1 ? "ENABLED" : "DISABLED"));
-                }
-            } catch (SQLException e) {
-                System.err.println("Error enabling foreign keys: " + e.getMessage());
-                // Continue anyway - don't throw here
-            }
+            //Make sure foreign keys are enabled for referential integrity
+            ensureForeignKeysEnabled();
         }
         return connection;
     }
@@ -62,24 +47,6 @@ public class DbManager {
     }
 
     /**
-     * Checks if the connection is closed.
-     *
-     * @return true if the connection is null or closed, false otherwise
-     */
-    public static synchronized boolean isClosed() {
-        if (connection == null) {
-            return true;
-        }
-
-        try {
-            return connection.isClosed();
-        } catch (SQLException e) {
-            System.err.println("Error checking if connection is closed: " + e.getMessage());
-            return true;  // Assume closed if we can't check
-        }
-    }
-
-    /**
      * Ensures foreign keys are enabled on the current connection.
      * This is useful for operations that require foreign key constraints.
      *
@@ -92,7 +59,15 @@ public class DbManager {
         }
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute("PRAGMA foreign_keys = ON;");
+            statement.execute("PRAGMA foreign_keys = ON;"); // checks current status of FK enforcement
+
+            ResultSet rs = statement.executeQuery("PRAGMA foreign_keys;");
+            if (rs.next()) {
+                int enabled = rs.getInt(1); // enabled will contain either 1 (enabled) or 0 (disabled)
+                if (enabled != 1) {
+                    throw new SQLException("Error enabling foreign keys.");
+                }
+            }
         }
     }
 }

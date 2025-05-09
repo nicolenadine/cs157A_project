@@ -207,7 +207,7 @@ public class AppointmentService {
      */
     public ServiceResponse<List<Appointment>> findAppointmentsByDate(String dateString) {
         try {
-            LocalDate date = LocalDate.parse(dateString);
+            LocalDate date = LocalDate.parse(dateString); // format 'YYYY-MM-DD'
             return findAppointmentsByDate(date);
         } catch (DateTimeParseException e) {
             return ServiceResponse.conflict("Invalid date format. Expected YYYY-MM-DD, got: " + dateString);
@@ -259,7 +259,8 @@ public class AppointmentService {
     }
 
     /**
-     * Checks if a provider is already booked at a specific date and time.
+     * Checks if a provider is already booked at a specific date and time. Since database has
+     *  a constraint UNIQUE (provider, date, time). Helps catch a conflict before an error.
      *
      * @param providerId the ID of the provider
      * @param date the date of the appointment
@@ -269,6 +270,7 @@ public class AppointmentService {
      */
     public boolean isProviderSlotTaken(int providerId, LocalDate date, LocalTime time, Integer excludeAppointmentId) {
 
+        // HH:MM format
         String formattedTime = String.format("%02d:%02d", time.getHour(), time.getMinute());
 
         try {

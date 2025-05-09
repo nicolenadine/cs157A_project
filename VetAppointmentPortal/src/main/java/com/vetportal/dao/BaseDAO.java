@@ -85,7 +85,10 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         String tableName = mapper.getTableName();
         List<String> orderedAttributes = getOrderedAttributes();
 
+        // A string containing the column fields in order separated by a comma
         String columns = String.join(", ", orderedAttributes);
+
+        // A string containing a number of '?' placeholder symbols equal to the number of attributes, separated by comma
         String placeholders = String.join(", ", Collections.nCopies(orderedAttributes.size(), "?"));
 
         return "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + placeholders + ")";
@@ -102,9 +105,15 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected String getUpdateQuery() {
         String tableName = mapper.getTableName();
         Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
+
+        // Get the database field name corresponding to 'id'  (e.g, customer_id, pet_id, ...)
         String idColumn = attributeMap.get("id");
 
         List<String> columns = getOrderedAttributes();
+
+        // Update statements must include all fields. For each column in the ordered attributes
+        // append a '= ?' after the column (e.g, 'first_name' becomes 'first_name = ?')
+        // then combines these column strings separated by a comma.
         String setClause = columns.stream()
                 .map(col -> col + " = ?")
                 .collect(Collectors.joining(", "));
@@ -122,25 +131,13 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     protected String getDeleteQuery() {
         String tableName = mapper.getTableName();
         Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
+
+        // Need the database id field name for the class to use in the WHERE statement
         String idColumn = attributeMap.get("id");
 
         return "DELETE FROM " + tableName + " WHERE " + idColumn + " = ?";
     }
 
-
-    /**
-     * Helper method builds an SQL SELECT query to find an entity by its ID.
-     * Uses the ID column from the entity mapper for the WHERE clause.
-     *
-     * @return a SQL SELECT statement with a placeholder or the ID to go in WHERE clause
-     */
-    protected String getFindByIdQuery() {
-        String tableName = mapper.getTableName();
-        Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
-        String idColumn = attributeMap.get("id");
-
-        return "SELECT * FROM " + tableName + " WHERE " + idColumn + " = ?";
-    }
 
     /**
      * Helper method that builds an SQL SELECT query to find all entities of this type.
@@ -163,10 +160,14 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      * @return a SQL SELECT statement with placeholders for the attribute values
      */
     protected String buildSelectQuery(Map<String, String> dbAttributes) {
+
+        // Creates a stream of attribute values and for each one appends the placeholder " = ?" after
+        // These conditions are inserted into a String[] sized to the number of attributes in the stream
         String[] conditions = dbAttributes.keySet().stream()
                 .map(field -> field + " = ?")
                 .toArray(String[]::new);
 
+        // after the WHERE keyword add each condition in the array joined with "AND" to complete the query
         return "SELECT * FROM " + mapper.getTableName() + " WHERE " + String.join(" AND ", conditions);
     }
 
@@ -183,17 +184,26 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      * @throws SQLException if a database error occurs
      */
     protected List<T> executeQueryForList(String query, Object[] params) throws SQLException {
+        // This method is designed to be as generic as possible in order
+        // to work with any class, entity type, or number of parameters
+
         List<T> results = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+            // Loop through the array of parameters (values to be used in the query)
             for (int i = 0; i < params.length; i++) {
+                // set query values based on params.
+                // indexing starts at 1 not 0 in JDBC
                 statement.setObject(i + 1, params[i]);
-                System.out.println("Parameter " + (i + 1) + ": " + params[i]);
             }
 
             ResultSet rs = statement.executeQuery();
+
+            // Retrieve and all results while rs has next
             while (rs.next()) {
                 try {
+                    // Uses mapper class of subclass T (all subclasses have defined mappers)
                     T entity = mapper.mapResultSetToEntity(rs);
                     results.add(entity);
                 } catch (SQLException e) {
@@ -217,6 +227,8 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      * @throws IllegalArgumentException if an invalid attribute name is provided
      */
     protected Map<String, String> translateAttributeNames(Map<String, String> attributes) {
+
+        // dbAttributes Will store the database field names and corresponding values passed by caller
         Map<String, String> dbAttributes = new HashMap<>();
         Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
 
@@ -231,6 +243,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
                 throw new IllegalArgumentException("Invalid attribute: " + javaAttr);
             }
 
+            // Add db field and assigned value to the HashMap
             dbAttributes.put(dbAttr, entry.getValue());
         }
 
@@ -252,6 +265,8 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         System.out.println("Executing SQL: " + sql);
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            // use subclass's setCreateStatement method to assign entity's values to
+            // statement placeholders
             setCreateStatement(statement, entity);
 
             int rowsAffected = statement.executeUpdate();
@@ -282,6 +297,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
             return false;
         } catch (SQLException e) {
             System.err.println("SQL Error in create(): " + e.getMessage());
+            // Checks for UNIQUE constraint violations
             if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DataAccessException("Duplicate entry detected: " + e.getMessage(), e);
             }
@@ -299,8 +315,9 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      */
     @Override
     public boolean update(T entity) {
+        // Each subclass is responsible for setting the update and set  query parameters since
+        // Each table has a different number of attributes of different types
         String sql = getUpdateQuery();
-        System.out.println("Executing SQL: " + sql);
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setUpdateStatement(statement, entity);
@@ -326,6 +343,8 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      */
     @Override
     public boolean delete(Integer id) {
+
+        // Important that foreign keys are enabled because many tables have ON DELETE CASCADE
         try {
             DbManager.ensureForeignKeysEnabled();
         } catch (SQLException e) {
@@ -335,8 +354,9 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         String sql = getDeleteQuery();
         System.out.println("Executing SQL: " + sql + " with ID: " + id);
 
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
+            statement.setInt(1, id); // only need id (primary key) to execute delete
             int rowsAffected = statement.executeUpdate();
             System.out.println("Rows affected: " + rowsAffected);
             return rowsAffected > 0;
@@ -361,6 +381,8 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
     public Optional<T> findByID(Integer id) {
         Map<String, String> attributeMap = mapper.getJavaToDbAttributeMap();
         String dbIdField = attributeMap.get("id");
+
+        // This should never happen but just in case
         if (dbIdField == null) {
             throw new IllegalStateException("Missing 'id' field mapping");
         }
@@ -368,6 +390,7 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("id", String.valueOf(id));
 
+        // Calls findByAttributes just with only id attribute supplied
         return findByAttributes(attributes);
     }
 
@@ -403,16 +426,25 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      * @throws DataAccessException if a database error occurs
      */
     public Optional<T> findByAttributes(Map<String, String> attributes) {
+        // Convert Java attribute names to database column names
         Map<String, String> dbAttributes = translateAttributeNames(attributes);
+
+        // Create the SELECT query with WHERE conditions for each attribute
         String query = buildSelectQuery(dbAttributes);
-        System.out.println("Query: " + query);
-        System.out.println("Attributes: " + dbAttributes);
 
         try {
+            // Execute the query with attribute values as parameters
+            // and convert the result set into a list of entity objects
+            // attribute values are converted to array because executeQueryForList takes
+            // an Object[] of parameters
             List<T> results = executeQueryForList(query, dbAttributes.values().toArray());
+
+            // If no results found, return an empty Optional
             if (results.isEmpty()) {
                 return Optional.empty();
             }
+
+            // Return the first result wrapped in an Optional
             return Optional.of(results.get(0));
         } catch (SQLException e) {
             throw new DataAccessException("Error finding by attributes: " + e.getMessage(), e);
@@ -430,10 +462,16 @@ public abstract class BaseDAO<T> implements GenericDAO<T> {
      * @throws DataAccessException if a database error occurs
      */
     public List<T> findAllByAttributes(Map<String, String> attributes) {
+        // Convert Java attribute/field names to database column names
         Map<String, String> dbAttributes = translateAttributeNames(attributes);
+
+        // Create a SELECT query with WHERE conditions for each attribute
         String query = buildSelectQuery(dbAttributes);
 
         try {
+            // Execute the query with the attribute values as parameters. Attribute values are
+            // converted to array because executeQueryForList takes an Object[] of parameters.
+            // convert the result set into a list of entity objects
             return executeQueryForList(query, dbAttributes.values().toArray());
         } catch (SQLException e) {
             throw new DataAccessException("Error fetching entities by attributes", e);

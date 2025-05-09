@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomerMapper implements EntityMapper<Customer> {
+    // Key = Java Entity attributes, Value = corresponding field name in database table
     @Override
     public Map<String, String> getJavaToDbAttributeMap() {
         Map<String, String> map = new HashMap<>();
@@ -26,6 +27,8 @@ public class CustomerMapper implements EntityMapper<Customer> {
         return "Customer";
     }
 
+    // Extracts attribute values from database result set and
+    // creates a new Java Entity from returned db values
     @Override
     public Customer mapResultSetToEntity(ResultSet rs) throws SQLException {
         return new Customer(

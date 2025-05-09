@@ -52,6 +52,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
         statement.setInt(6, appointment.getID());
     }
 
+    // These lines shared between previous two methods. prevents unnecessary duplication
     protected void setNonIdAttributes(PreparedStatement statement, Appointment appointment) throws SQLException {
         statement.setString(1, appointment.getDate().toString());
         statement.setString(2, appointment.getTime().toString());
@@ -151,16 +152,6 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
             return false;
         }
 
-        Appointment appt = appointment.get();
-
-        // Logging for debugging
-        System.out.println("Deleting appointment: ID=" + appointmentId +
-                ", Date=" + appt.getDate() +
-                ", Time=" + appt.getTime() +
-                ", Provider=" + appt.getProvider().getID() +
-                ", Pet=" + appt.getPet().getID());
-
-
         return super.delete(appointmentId);
     }
 
@@ -179,12 +170,13 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
      * @throws DataAccessException if a database error occurs
      */
     public List<Appointment> findAllAppointmentsByDate(LocalDate date) {
+       // Uses the AppointmentDetailView table view to execute the join to reduce method clutter.
         String query = "SELECT * FROM AppointmentDetailView WHERE appointment_date = ? ORDER BY time";
 
         List<Appointment> appointments = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, date.toString());
+            statement.setString(1, date.toString()); // format 'YYYY-MM-DD'
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
@@ -237,6 +229,7 @@ public class AppointmentDAO extends BaseDAO<Appointment> {
      * @throws DataAccessException if a database error occurs
      */
     public boolean isProviderSlotTaken(int providerId, String date, String time, Integer excludeAppointmentId) {
+       // Query to check if a provider already has an appointment at the specified date and time
         String sql = """
         SELECT 1 FROM Appointment
         WHERE provider = ? AND date(appointment_date) = ? AND time = ?
