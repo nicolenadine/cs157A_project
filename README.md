@@ -34,6 +34,7 @@ A simple, easy-to-use appointment scheduling system for a veterinarian office.
 git clone https://github.com/nicolenadine/cs157A_project.git
 cd cs157A_project
 ```
+Open VetAppointmentPortal Directory in IDE of choice
 
 ### 2. Build the Project
 ```bash
