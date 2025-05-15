@@ -95,4 +95,18 @@ The project automatically manages the following dependencies through Maven:
 
 Note: You don't need to download JavaFX separately. Maven will download and manage all dependencies.
 
+![Screenshot 2025-05-15 at 4 22 58 PM](https://github.com/user-attachments/assets/ddda546a-cd8a-465e-b2cb-6905cecd8e6c)
+Home Screen displays appointments for the selected day (default to current day) and a list of customers/employees
+![Screenshot 2025-05-15 at 4 23 29 PM](https://github.com/user-attachments/assets/f849dabf-7ee5-4c86-81b7-5c8f10414fbc)
+Appointment creation page enables customer lookup by phone that auto populates customer data (if exists).
+Drop down displays the customer's pets and auto populates pet info for selected pet. 
+Changes made to customer or pet informaiton automatically updates the database record for those fields upon apppointment creation. 
+Date and provider drop downs automatically filter available options based on current selection. Enforces the constraint
+that a provder can not be booked twice for the same date and time slot. 
+![Screenshot 2025-05-15 at 4 24 26 PM](https://github.com/user-attachments/assets/84917608-5693-449e-8528-6e3d7c8f7714)
+Filter appointments based on search criteria (date, provider, etc). Select an appointment to edit or delete.
+![Screenshot 2025-05-15 at 4 24 04 PM](https://github.com/user-attachments/assets/4d05ad49-300e-4122-8e54-b12eca29a517)
+Create a new customer profile in the system. Pets are then added from inside the customer profile. 
+
+
 
