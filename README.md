@@ -100,14 +100,20 @@ Note: You don't need to download JavaFX separately. Maven will download and mana
 ![Screenshot 2025-05-15 at 4 22 58 PM](https://github.com/user-attachments/assets/ddda546a-cd8a-465e-b2cb-6905cecd8e6c)
 (below) Appointment creation page enables customer lookup by phone that auto populates customer data (if exists).
 Drop down displays the customer's pets and auto populates pet info for selected pet. 
-Changes made to customer or pet informaiton automatically updates the database record for those fields upon apppointment creation. 
+Changes made to customer or pet informaiton automatically updates the database record for those fields upon apppointment creation.
+This approach ensures that a customer and pet must be in the system first and minimizes manual data entry and potential errors.
 Date and provider drop downs automatically filter available options based on current selection. Enforces the constraint
 that a provder can not be booked twice for the same date and time slot. 
 ![Screenshot 2025-05-15 at 4 23 29 PM](https://github.com/user-attachments/assets/f849dabf-7ee5-4c86-81b7-5c8f10414fbc)
 (below) Filter appointments based on search criteria (date, provider, etc). Select an appointment to edit or delete.
 ![Screenshot 2025-05-15 at 4 24 26 PM](https://github.com/user-attachments/assets/84917608-5693-449e-8528-6e3d7c8f7714)
+![Screenshot 2025-05-15 at 4 32 22 PM](https://github.com/user-attachments/assets/15fc5f87-f10f-44ed-ae5e-6939497f59eb)
+(above) Lookup  a customer by phone number to pull up their profile and pet information.
 (below) Create a new customer profile in the system. Pets are then added from inside the customer profile. 
 ![Screenshot 2025-05-15 at 4 24 04 PM](https://github.com/user-attachments/assets/4d05ad49-300e-4122-8e54-b12eca29a517)
+(below) Click Edit above the pet table and select the pet from a dropdown to pull up the edit pet window. Existing data
+is populated automatically.
+![Screenshot 2025-05-15 at 4 32 55 PM](https://github.com/user-attachments/assets/5ff4492e-d503-4f61-afd0-2f30bcb89387)
 
 
 
